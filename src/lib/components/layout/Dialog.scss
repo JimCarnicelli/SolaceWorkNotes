@@ -1,0 +1,85 @@
+@import '@/styles/variables.scss';
+
+.Modal>.Dialog {
+    display: flex;
+    flex-direction: column;
+    max-width: calc(100vw - 3rem);
+    max-height: calc(100vh - 3rem);
+    border-radius: 0.3rem;
+    background-color: white;
+    overflow: auto;
+
+    &>header {
+        display: flex;
+        align-items: stretch;
+        background-color: rgb(240, 240, 240);
+
+        h2 {
+            flex-grow: 1;
+            display: flex;
+            align-items: center;
+            padding-left: 0.9rem;
+            padding-right: 0.5rem;
+            padding-top: 0.3rem;
+            padding-bottom: 0.4rem;
+            font-size: 1.1rem;
+            font-weight: normal;
+        }
+
+        .Button.Close {
+            display: flex;
+            align-items: center;
+            padding-left: 0.7rem;
+            padding-right: 0.7rem;
+            border: none;
+            color: rgb(189, 189, 189);
+
+            &:hover {
+                background-color: red;
+                color: white;
+            }
+
+            &>.Inliner {
+                display: none;
+            }
+        }
+    }
+
+    &>main {
+        overflow: auto;
+
+        &.Padded {
+            padding: 1rem;
+        }
+
+        .PaddedContent {
+            padding: 1rem;
+        }
+    }
+
+    &>footer {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: flex-end;
+        padding: 0.5rem 0.9rem;
+        border-top: 1px solid lightgray;
+
+        &>*:not(:last-child) {
+            margin-right: 0.3rem;
+        }
+    }
+
+    @media (max-width: $mobile-breakpoint) {
+        padding: 0;
+
+        &>.Panel.MobileFull {
+            max-width: 100vw;
+            max-height: 100vh;
+            width: 100vw;
+            height: 100vh;
+            border-radius: 0;
+        }
+    }
+
+}

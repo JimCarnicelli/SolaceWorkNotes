@@ -1,0 +1,24 @@
+.CheckBox {
+    display: inline-flex;
+    align-items: center;
+    font-family: var(--page-font-family);
+    font-size: 0.9rem;
+
+    &.MarginLeft {
+        margin-left: 0.3rem;
+    }
+
+    &.MarginRight {
+        margin-right: 0.3rem;
+    }
+
+    &>span {
+        padding-left: 0.15rem;
+        padding-right: 0.5rem;
+    }
+
+    @media (pointer: coarse) {
+        min-height: 2.5rem;
+    }
+
+}

@@ -1,8 +1,6 @@
-import { apiServer } from '@/lib/apiServer';
+import { apiServer } from '@/lib/utilities/apiServer';
 import { apiUserGet } from './_def';
-import { dbCore } from '@/lib/db/dbServer';
-import { UserTable } from '@/lib/db/entities/UserTable';
-import { Guid } from '@/lib/db/dbShared';
+import { userGet } from './userGet';
 
 /** One API endpoint */
 export const POST = apiServer.handler<apiUserGet.Params, apiUserGet.Return>(async (req) => {
@@ -10,11 +8,3 @@ export const POST = apiServer.handler<apiUserGet.Params, apiUserGet.Return>(asyn
         user: await userGet(req.p.id),
     };
 });
-
-/** Fetch a single user record */
-export async function userGet(id: Guid) {
-    return await dbCore.getRow({
-        table: UserTable,
-        where: { id },
-    });
-}

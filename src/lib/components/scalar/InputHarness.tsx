@@ -1,0 +1,109 @@
+import './InputHarness.scss';
+import { ReactNode } from 'react';
+import { FieldState } from '@/lib/utilities/useForm';
+import { icons } from '@/lib/components/graphics/Icon';
+import { cn } from '@/lib/utilities/stringHelpers';
+
+export type InputHarnessProps<T> = {
+    field?: FieldState<T>,
+    title?: ReactNode,
+    prefix?: ReactNode,
+    suffix?: ReactNode,
+    beforeInput?: ReactNode,
+    afterInput?: ReactNode,
+    required?: boolean,
+    width?: string | number,
+    forceWidth?: boolean,
+    bordered?: boolean,
+    marginLeft?: boolean,
+    marginRight?: boolean,
+    marginBottom?: boolean,
+    errorMessage?: ReactNode,
+    className?: string,
+    children?: ReactNode,
+    onClear?: () => void,
+}
+
+export function InputHarness<T>(props: InputHarnessProps<T>) {
+
+    const field = props.field;
+    const title = props.title ?? field?.title;
+    const required = props.required ?? field?.required ?? false;
+    const errorMessage = props.errorMessage ?? ((field?.touched || field?.submitted) && field?.errorMessage);
+
+    return (
+        <table
+            className={
+                'InputHarness' +
+                cn('WithTitle', title) +
+                cn(props.className) +
+                cn('MarginLeft', props.marginLeft) +
+                cn('MarginRight', props.marginRight) +
+                cn('MarginBottom', props.marginBottom)
+            }
+            style={{
+                maxWidth: props.width,
+                width: props.width
+                    ? (props.forceWidth ? props.width : '100%')
+                    : undefined,
+            }}
+        ><tbody>
+            {title && (
+                <tr>
+                    <td></td>
+                    <td colSpan={props.suffix ? 2 : 1} className='Title'>
+                        {required && (
+                            <span className='Required' title='Required'><icons.FaAsterisk /></span>
+                        )}
+                        <span>{title}</span>
+                    </td>
+                </tr>
+            )}
+            <tr>
+                <td className={
+                    'Prefix' +
+                    cn('Empty', !props.prefix)
+                }>
+                    {props.prefix ?? <>&nbsp;</>}
+                </td>
+                <td className={
+                    'Input' +
+                    cn('Bordered', props.bordered) +
+                    cn('WithBefore', props.bordered && props.beforeInput) +
+                    cn('WithAfter', props.bordered && props.afterInput)
+                }>
+                    {props.beforeInput && (
+                        <div className='BeforeInput'>
+                            {props.beforeInput}
+                        </div>
+                    )}
+                    {props.children}
+                    {(props.onClear || props.afterInput) && (
+                        <div className='AfterInput'>
+                            {props.onClear && (
+                                <div
+                                    className='ClearButton'
+                                    onClick={props.onClear}
+                                >
+                                    <icons.FaTimes />
+                                </div>
+                            )}
+                            {props.afterInput}
+                        </div>
+                    )}
+                </td>
+                {props.suffix && (
+                    <td className='Suffix'>{props.suffix}</td>
+                )}
+            </tr>
+            {errorMessage && (
+                <tr>
+                    <td></td>
+                    <td colSpan={props.suffix ? 2 : 1} className='ErrorMessage'>
+                        {errorMessage}
+                    </td>
+                </tr>
+            )}
+        </tbody></table>
+    );
+}

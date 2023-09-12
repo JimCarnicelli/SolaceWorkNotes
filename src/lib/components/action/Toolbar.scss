@@ -1,0 +1,154 @@
+@import '@/styles/variables.scss';
+
+.Toolbar {
+    display: flex;
+    font-size: 0.9rem;
+    align-items: center;
+
+    @media (max-width: $mobile-breakpoint) {
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+    }
+
+    &.Centered {
+        justify-content: center;
+    }
+
+    &.MarginBottom {
+        margin-bottom: 1rem;
+    }
+
+    .Band {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        border-radius: 2rem;
+        border: 1px solid var(--color-control-rim);
+        box-shadow: 0rem 0rem 0.75rem rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+
+        @media (max-width: $mobile-breakpoint) {
+            flex-grow: 1;
+            margin-left: var(--mobile-horizontal-unpadding);
+            margin-right: var(--mobile-horizontal-unpadding);
+            padding-left: 0;
+            padding-right: 0;
+            padding-top: 0.5rem;
+            padding-bottom: 0.5rem;
+            border-radius: 0;
+            border-left: none;
+            border-right: none;
+            box-shadow: none;
+        }
+    }
+
+    .Button {
+        justify-content: center;
+        height: 2.3rem;
+        border-radius: 0;
+        border: none;
+        background-color: transparent;
+        color: var(--color-contrast-block-bg);
+
+        @media (max-width: $mobile-breakpoint) {
+            height: 3rem;
+            margin: 1px;
+            border-radius: 0.3rem;
+            border: 1px solid var(--color-control-rim);
+        }
+
+        &:hover:not([disabled]) {
+            background-color: var(--color-page-hover-bg);
+        }
+
+        &:first-child {
+            padding-left: 1.25rem;
+        }
+
+        &:last-child {
+            padding-right: 1.25rem;
+        }
+
+        &[disabled] {
+            color: var(--color-contrast-block-disabled-bg);
+        }
+
+        &.Solid {
+            background-color: var(--color-contrast-block-bg);
+            color: var(--color-contrast-block-text);
+        }
+    }
+
+    // The header's toolbar has a different style than the others
+    &.ForHeader {
+        padding-top: 0.3rem;
+        padding-bottom: 0.3rem;
+
+        .Band {
+            padding: 0rem 2rem;
+            border-radius: 2.1rem;
+            border: 1px solid var(--color-control-rim);
+
+            @media (max-width: $mobile-breakpoint) {
+                flex-grow: 1;
+                margin-left: var(--mobile-horizontal-unpadding);
+                margin-right: var(--mobile-horizontal-unpadding);
+                padding: 0rem;
+                padding-top: 0.5rem;
+                padding-bottom: 0.5rem;
+                border-radius: 0;
+                border-left: none;
+                border-right: none;
+                box-shadow: none;
+            }
+        }
+
+        .Button {
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            height: 4rem;
+            min-width: 7rem;
+            padding-left: 1rem;
+            padding-right: 1rem;
+            padding-bottom: 0.75rem;
+            border-radius: 0;
+            border: none;
+            background-color: transparent;
+            color: var(--color-contrast-block-bg);
+            font-size: 1.5rem;
+
+            @media (max-width: $mobile-breakpoint) {
+                margin: 1px;
+                border-radius: 0.3rem;
+                border: 1px solid var(--color-control-rim);
+            }
+
+            &[disabled] {
+                color: var(--color-contrast-block-disabled-bg);
+            }
+
+            .Inliner {
+                display: none;
+            }
+
+            label {
+                font-size: 0.8rem;
+                visibility: visible !important; // Looks funny without the label when they are stacked
+            }
+
+            @media (min-width: $mobile-breakpoint) {
+                &:hover:not([disabled]) {
+                    background-color: var(--color-page-hover-bg);
+                }
+            }
+
+        }
+
+        &.MinWidths>.Button {
+            min-width: auto;
+        }
+
+    }
+
+}

@@ -1,6 +1,8 @@
 import { DbTable } from '@/lib/db/dbServer';
 import { Guid } from '@/lib/db/dbShared';
 
+export const currentUserId: Guid = 'acf4adb2-1397-47a7-92ae-8336b22556e6';
+
 /** One database table definition */
 
 export type UserRow = {

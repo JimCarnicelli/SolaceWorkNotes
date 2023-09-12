@@ -1,4 +1,4 @@
-import { ApiResult } from '@/lib/apiServer';
+import { ApiResult } from '@/lib/utilities/apiServer';
 
 export namespace apiClient {
 
@@ -10,7 +10,7 @@ export namespace apiClient {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: inputs ? JSON.stringify(inputs) : undefined,
+                body: inputs ? JSON.stringify(inputs) : '{}',
             });
             const ret = await res.json() as ApiResult<Return>;
 

@@ -1,4 +1,4 @@
-import { runMigrationScripts as runDbMigrations } from '@/lib/db/dbMigrations';
+import { runMigrationScripts as runDbMigrations } from '@/lib/db/migrations/_allMigrations';
 
 export default async function Page() {
 

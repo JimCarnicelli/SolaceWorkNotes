@@ -1,0 +1,94 @@
+@import '@/styles/variables.scss';
+
+.MessageBox {
+    display: flex;
+    flex-direction: column;
+    min-width: 10rem;
+    min-height: 4rem;
+    overflow: auto;
+
+    .ScrollingMessage {
+        flex-grow: 1;
+        overflow: auto;
+
+        .MessageBlock {
+            height: 100%;
+            display: flex;
+            align-items: center;
+            padding: 2rem 2.5rem;
+
+            .Icon {
+                display: flex;
+                align-items: center;
+                padding-right: 1rem;
+                font-size: 2rem;
+            }
+
+        }
+
+    }
+
+    .Actions {
+        display: flex;
+        justify-content: center;
+        gap: 0.3rem;
+        border-top: 1px solid rgb(207, 207, 207);
+        padding: 1rem 2rem;
+
+        .Button {
+            min-width: 7rem;
+        }
+    }
+
+    &.FlavorError {
+        border: 2px solid rgb(167, 61, 61);
+
+        .MessageBlock {
+            //background-color: rgb(255, 245, 245);
+            color: rgb(194, 14, 14);
+        }
+
+        .Actions {
+            background-color: rgb(255, 245, 245);
+
+            .Button {
+                border-color: rgb(167, 61, 61);
+                color: rgb(167, 61, 61);
+
+                &.Solid {
+                    background-color: rgb(167, 61, 61);
+                    color: white;
+                }
+
+            }
+
+        }
+    }
+
+    &.FlavorWarning {
+        border: 2px solid rgb(209, 86, 25);
+
+        .MessageBlock {
+            //background-color: rgb(255, 245, 245);
+            color: rgb(209, 86, 25);
+        }
+
+        .Actions {
+            background-color: rgb(253, 234, 222);
+
+            .Button {
+                border-color: rgb(209, 86, 25);
+                color: rgb(209, 86, 25);
+
+                &.Solid {
+                    background-color: rgb(209, 86, 25);
+                    color: white;
+                }
+
+            }
+
+        }
+    }
+
+    //&.FlavorYesNo {}
+}

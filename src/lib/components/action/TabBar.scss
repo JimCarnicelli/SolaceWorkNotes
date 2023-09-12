@@ -1,0 +1,86 @@
+@import '@/styles/variables.scss';
+
+.TabBar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    border-bottom: 1px solid var(--color-control-rim);
+
+    @media (max-width: $mobile-breakpoint) {
+        overflow: auto;
+        justify-content: flex-start;
+    }
+
+    .Band {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+
+        @media (max-width: $mobile-breakpoint) {
+            flex-wrap: nowrap;
+        }
+    }
+
+    .Tab {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0.75rem;
+        font-family: var(--page-font-family);
+        font-size: 0.9rem;
+        text-decoration: none;
+        white-space: nowrap;
+        transition: var(--transition-basic);
+        border: none;
+        border-bottom: 4px solid transparent;
+        background-color: transparent;
+        color: var(--color-contrast-block-bg);
+
+        &.Selected {
+            border-bottom-color: var(--color-contrast-block-bg);
+        }
+
+        .Icon {
+            margin-right: 0.3rem;
+        }
+
+        @media (min-width: $mobile-breakpoint) {
+            &:hover {
+                border-bottom-color: rgb(221, 87, 87);
+            }
+        }
+
+    }
+
+    @media (min-width: $mobile-breakpoint) {
+        .Band:hover {
+            .Tab {
+                &.Selected:not(:hover) {
+                    border-bottom-color: rgb(218, 218, 218);
+                }
+            }
+        }
+    }
+
+}
+
+.ManagementFlavor {
+
+    .TabBar {
+
+        &.ForHeader {
+            box-shadow: 0rem 0rem 0.75rem rgba(0, 0, 0, 0.2);
+        }
+
+        .Tab {
+            min-width: 11rem;
+            padding-top: 1.25rem;
+
+            @media (max-width: $mobile-breakpoint) {
+                width: auto;
+            }
+        }
+    }
+
+}

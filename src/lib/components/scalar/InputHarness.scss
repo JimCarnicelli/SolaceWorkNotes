@@ -1,0 +1,195 @@
+.InputHarness {
+    display: inline-table;
+    border-spacing: 0;
+
+    &.WithTitle {
+        vertical-align: 1.35rem;
+    }
+
+    &.MarginLeft {
+        margin-left: 0.3rem;
+    }
+
+    &.MarginRight {
+        margin-right: 0.3rem;
+    }
+
+    &.MarginBottom {
+        margin-bottom: 0.5rem;
+    }
+
+    &>tbody>tr {
+
+        &>td {
+            padding: 0;
+
+            &.Title {
+                font-size: 0.8rem;
+                padding-left: 0.2rem;
+
+                .Required {
+                    font-size: 0.7rem;
+                    margin-right: 0.2rem;
+                    //vertical-align: -0.1rem;
+                    color: rgb(150, 0, 0);
+                }
+            }
+
+            &.Input {
+                font-size: 0.9rem;
+                width: 100%;
+                display: flex;
+                align-items: stretch;
+
+                &.Bordered {
+                    border-radius: 0.3rem;
+                    background-color: var(--color-control-bg);
+                    border: 1px solid var(--color-control-rim);
+                    overflow: hidden;
+                }
+
+                // Iconic button before or after the textbox
+                &>button,
+                .Button {
+                    display: flex;
+                    align-items: center;
+                    height: 100%;
+                    padding: 0;
+                    padding-left: 0.4rem;
+                    padding-right: 0.4rem;
+                    background-color: transparent;
+                    border-radius: 0;
+                    border: none;
+                    color: gray;
+                    font-size: 0.9rem;
+
+                    &:hover {
+                        background-color: rgb(234, 234, 234);
+                        color: black;
+                    }
+
+                    &:disabled {
+                        color: lightgray;
+                    }
+
+                    @media (pointer: coarse) {
+                        padding-left: 0.8rem;
+                        padding-right: 0.8rem;
+                        font-size: 1.3rem;
+                    }
+                }
+
+                // Iconic button before or after the textbox
+                &>.Icon {
+                    display: flex;
+                    align-items: center;
+                    padding-left: 0.4rem;
+                    padding-right: 0.4rem;
+                    background-color: transparent;
+                    border: none;
+                    color: gray;
+                    font-size: 1.2rem;
+                }
+
+                &>input:focus,
+                textarea,
+                select {
+                    outline: none;
+                }
+
+                &:focus-within {
+                    border-color: var(--color-control-focus-rim);
+                    outline: 1px solid var(--color-control-focus-rim);
+                }
+
+                &:hover {
+                    &>.AfterInput {
+                        &>.ClearButton {
+                            display: flex;
+                        }
+                    }
+                }
+
+            }
+
+            &.Prefix {
+                font-size: 0.9rem;
+                padding-right: 0.2rem;
+
+                &.Empty {
+                    overflow: hidden;
+                    max-width: 0;
+                    padding: 0;
+                }
+            }
+
+            &.Suffix {
+                font-size: 0.9rem;
+                padding-left: 0.2rem;
+            }
+
+            &.ErrorMessage {
+                font-size: 0.9rem;
+                padding-top: 0.2rem;
+                padding-left: 0.4rem;
+                padding-right: 0.4rem;
+                color: red;
+            }
+
+            &>.BeforeInput,
+            &>.AfterInput {
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+                justify-content: stretch;
+                position: relative;
+
+                // Although these are mostly buttons, sometimes it's just decorative 
+                // flair. As with the magnifier icon on <FilterTextBox>.
+                .Flair {
+                    flex-grow: 1;
+                    height: 100%;
+                    width: 2rem;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                }
+
+                &.BeforeInput {
+                    .Flair {
+                        padding-left: 0.25rem;
+                    }
+                }
+
+                &.AfterInput {
+                    .Flair {
+                        padding-right: 0.25rem;
+                    }
+                }
+            }
+
+            &>.AfterInput {
+                .ClearButton {
+                    //display: flex;
+                    display: none;
+                    align-items: center;
+                    justify-content: center;
+                    position: absolute;
+                    left: -1.8rem;
+                    width: 1.8rem;
+                    height: 100%;
+                    cursor: default;
+                    color: lightgray;
+
+                    &:hover {
+                        background-color: rgba(255, 255, 255, 0.8);
+                        color: red;
+                    }
+                }
+            }
+
+        }
+
+    }
+
+}

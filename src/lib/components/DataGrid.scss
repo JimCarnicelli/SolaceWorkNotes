@@ -1,0 +1,331 @@
+@import '@/styles/variables.scss';
+
+.DataGrid {
+
+    .TopBar {
+        padding-bottom: 1rem;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        gap: 1rem;
+
+        &.Bottom {
+            padding-top: 1rem;
+            padding-bottom: 0rem;
+        }
+
+        @media (max-width: $mobile-breakpoint) {
+            flex-direction: column;
+        }
+
+        @media (min-width: $mobile-breakpoint) {
+            .InputHarness {
+
+                .Input {
+                    height: 2rem;
+                    border-radius: 0;
+                }
+
+                .BeforeInput,
+                .AfterInput {
+                    color: var(--color-contrast-block-bg);
+                }
+            }
+        }
+
+        .Button {
+            background-color: var(--color-control-bg);
+            color: var(--color-contrast-block-bg);
+            border-radius: 2rem;
+
+            &:hover {
+                background-color: var(--color-contrast-block-bg);
+                color: var(--color-control-bg);
+            }
+        }
+    }
+
+    @media (min-width: $mobile-breakpoint) {
+
+        // We'll torture the standard scalar value controls into a custom style for this
+        .FilterBar {
+            overflow: hidden;
+            border-radius: 2rem;
+            border: 1px solid var(--color-control-rim);
+
+            &:focus-within {
+                border-color: var(--color-control-focus-rim);
+                outline: 1px solid var(--color-control-focus-rim);
+            }
+
+            .InputHarness {
+                .Input.Bordered {
+                    border: none;
+                    outline: none;
+                }
+
+                &:not(:first-child) {
+                    .Input.Bordered {
+                        border-left: 1px solid var(--color-control-rim);
+                    }
+                }
+
+                &:first-child {
+                    .Input.Bordered {
+                        padding-left: 0.25rem;
+                    }
+                }
+
+                &:last-child {
+                    .Input.Bordered {
+                        padding-right: 0.25rem;
+                    }
+                }
+            }
+
+            .CheckBox {
+                height: 2rem;
+                padding: 0 0.5rem;
+
+                &:not(:first-child) {
+                    border-left: 1px solid var(--color-control-rim);
+                }
+            }
+        }
+    }
+
+    .TopPager {
+
+        .Input.Bordered {
+            padding: 0 0.2rem;
+            border-radius: 2rem;
+
+            @media (max-width: $mobile-breakpoint) {
+                height: 2.5rem;
+            }
+        }
+
+        .Button {
+            margin-left: 0.5rem;
+            padding: 0;
+            width: 2rem;
+            border-radius: 2rem;
+
+            @media (max-width: $mobile-breakpoint) {
+                width: 2.5rem;
+            }
+
+            &:disabled {
+                color: var(--color-page-text-soft);
+            }
+
+            &:focus {
+                outline-color: var(--color-control-focus-rim);
+            }
+        }
+    }
+
+    .PageSummary {
+        flex-grow: 1;
+        font-size: 0.8rem;
+        text-align: right;
+        color: var(--color-page-text-soft);
+    }
+
+    table.GridTable {
+        border-collapse: collapse;
+    }
+
+    &.SelectList {
+
+        .Content {
+
+            .GridTable {
+                width: 100%;
+                cursor: default;
+            }
+
+            tr.DataRow,
+            div.DataRow {
+                padding: 0.5rem;
+
+                &.Disabled {
+                    opacity: 0.5;
+                }
+
+                td {
+                    padding: 0.5rem;
+                }
+
+                &.Selected {
+                    background-color: rgb(225, 225, 225);
+                }
+
+                &:hover {
+                    background-color: rgb(226, 246, 255);
+                }
+
+                &:not(:first-child) {
+                    border-top: 1px solid rgb(240, 240, 240);
+                }
+            }
+
+        }
+    }
+
+    &.BasicTable {
+        .GridTable {
+            width: 100%;
+            border: 1px solid rgb(240, 240, 240);
+
+            th {
+                padding: 0.5rem;
+                text-align: left;
+                border-top: 1px solid rgb(240, 240, 240);
+            }
+
+            tr.DataRow,
+            div.DataRow {
+                padding: 0.5rem;
+                border-bottom: 1px solid rgb(240, 240, 240);
+
+                &.Disabled {
+                    opacity: 0.5;
+                }
+
+                td {
+                    padding: 0.5rem;
+                }
+
+                &.Selected {
+                    background-color: rgb(225, 225, 225);
+                }
+
+                &:first-child {
+                    border-top: 1px solid rgb(240, 240, 240);
+                }
+            }
+        }
+
+        &.HoverHighlight {
+            .GridTable {
+                cursor: default;
+
+                tr.DataRow,
+                div.DataRow {
+                    &:hover {
+                        background-color: rgb(226, 246, 255);
+
+                    }
+                }
+            }
+        }
+    }
+
+}
+
+////////////////////////////////////////////////////////////////////////////////
+
+.IconicTiles {
+
+    .GridTable {
+        //margin-top: 0.5rem;
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(11rem, 1fr));
+        gap: 0.75rem;
+
+        .Item {
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            width: 100%;
+            height: 100%;
+            margin-block-start: auto;
+            margin-block-end: auto;
+            margin-inline-start: auto;
+            margin-inline-end: auto;
+            font-size: 0.9rem;
+            border: 1px solid var(--color-page-hairline);
+            border-radius: 0.4rem;
+            overflow: hidden;
+            transition: var(--transition-basic);
+            color: black;
+
+            &.Selectable {
+
+                .SelectMask {
+                    position: absolute;
+                    left: 0;
+                    right: 0;
+                    top: 0;
+                    bottom: 0;
+                    background-color: var(--color-page-bg);
+                    opacity: 0.7;
+                }
+
+                &.Selected {
+                    border-color: var(--color-control-focus-rim);
+
+                    .SelectMask {
+                        opacity: 0;
+                    }
+                }
+            }
+
+            &.Disabled {
+                opacity: 0.4;
+                filter: saturate(0);
+            }
+
+            .Thumbnail {
+                border-bottom: 1px solid var(--color-page-hairline);
+            }
+
+            .Body {
+                flex-grow: 1;
+                display: flex;
+                flex-direction: column;
+                padding: 0.5rem;
+            }
+
+            figcaption {
+                font-size: 1rem;
+            }
+
+            .ExtraNote {
+                display: flex;
+                align-items: center;
+                padding-top: 0.5rem;
+                font-size: 0.8rem;
+
+                &>svg:first-child {
+                    margin-right: 0.25rem;
+                }
+            }
+
+            .ParentName {
+                padding-top: 0.5rem;
+                font-size: 0.8rem;
+            }
+
+            div {
+                display: block;
+                //text-align: center;
+            }
+
+            span {
+                font-size: 0.8rem;
+                font-style: italic;
+            }
+
+            &:hover {
+                border-color: rgb(50, 114, 151);
+                background-color: rgb(229, 243, 243);
+                box-shadow: 0rem 0.5rem 1rem rgba(0, 0, 0, 0.2);
+                transform: scale(1.01) translate(-0.02rem, -0.1rem);
+            }
+
+        }
+    }
+
+}

@@ -1,0 +1,48 @@
+@import '@/styles/variables.scss';
+
+.FormMessages {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 1rem;
+    color: red;
+
+    @media (max-width: $mobile-breakpoint) {
+        max-width: auto;
+        padding-left: 0;
+        padding-right: 0;
+    }
+
+    &>div {
+        width: 100%;
+        padding: 0.7rem;
+        text-align: center;
+        border: 1px solid red;
+        border-radius: 0.3rem;
+        background-color: rgb(255, 240, 230);
+
+        &>svg:first-child {
+            font-size: 1.3rem;
+            margin-right: 0.3rem;
+            vertical-align: -0.25rem;
+        }
+    }
+
+    .InvalidFields {
+        display: inline-block;
+        vertical-align: top;
+        text-align: left;
+
+        //label {}
+
+        ul {
+            font-size: 0.9rem;
+            margin-top: 0.3rem;
+            margin-bottom: 0.3rem;
+
+            li {
+                margin-left: -1.3rem;
+            }
+        }
+    }
+}

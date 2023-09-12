@@ -1,4 +1,4 @@
-import { MigrationScript } from "../dbMigrations";
+import { MigrationScript } from "./_allMigrations";
 export const script: MigrationScript = {
     up: `
 

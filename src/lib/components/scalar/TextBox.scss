@@ -1,0 +1,35 @@
+.TextBox {
+    font-size: 0.9rem;
+    width: 100%;
+    height: calc(2rem - 2px);
+    padding: 0rem 0.5rem;
+    background-color: transparent;
+    border: none;
+    font-family: var(--page-font-family);
+
+    &::placeholder {
+        color: lightgray;
+    }
+
+    &:disabled {
+        background-color: transparent;
+        color: rgb(199, 199, 199);
+        border-color: rgb(199, 199, 199);
+    }
+
+    @media (pointer: coarse) {
+        min-height: 2.5rem;
+    }
+
+}
+
+.TextBox_DropDown {
+    margin-left: -1px;
+    margin-top: 2px;
+    border-radius: 0.3rem;
+    background-color: var(--color-control-bg);
+    border: 1px solid var(--color-control-rim);
+    box-shadow: 0rem 0.5rem 1rem rgba(0, 0, 0, 0.2);
+    overflow: auto;
+    z-index: 1000;
+}

@@ -1,17 +1,20 @@
 import { apiClient } from '@/lib/utilities/apiClient';
-import { Guid } from '@/lib/db/dbShared';
+import { Guid, PagedRowset } from '@/lib/db/dbShared';
 import { UserRow } from '@/lib/db/entities/UserTable';
 
-export namespace apiUserGet {
+export namespace apiUserList {
 
     export type Params = {
-        id: Guid,
+        skip?: number,
+        take?: number,
+        filterText?: string,
+        advocateId?: Guid,
     }
 
     export type Return = {
-        user?: UserRow,
+        users?: PagedRowset<UserRow>,
     }
 
-    const url = 'api/user/get';
+    const url = 'api/user/list';
     export const call = async (params?: Params) => await apiClient.fetch<Params, Return>(url, params);
 }

@@ -1,0 +1,63 @@
+@import '@/styles/variables.scss';
+
+.Modal {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: fixed;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    padding: 1rem;
+    opacity: 0;
+    transition: var(--transition-basic);
+    pointer-events: none;
+    background-color: rgba(0, 0, 0, 0.3);
+
+    &.Transparent {
+        background-color: rgba(0, 0, 0, 0);
+    }
+
+    &.LightWeight {
+        background-color: rgba(0, 0, 0, 0.25);
+    }
+
+    &.HalfWeight {
+        background-color: rgba(0, 0, 0, 0.5);
+    }
+
+    &.HeavyWeight {
+        background-color: rgba(0, 0, 0, 0.75);
+    }
+
+    &.Show {
+        opacity: 1;
+        pointer-events: all;
+    }
+
+    &>* {
+        box-shadow: 0rem 0.5rem 1rem rgba(0, 0, 0, 0.3);
+    }
+
+    &>.Panel {
+        max-width: calc(100vw - 3rem);
+        max-height: calc(100vh - 3rem);
+        border-radius: 0.3rem;
+        background-color: white;
+        overflow: auto;
+    }
+
+    @media (max-width: $mobile-breakpoint) {
+        padding: 0;
+
+        &>.Panel.MobileFull {
+            max-width: 100vw;
+            max-height: 100vh;
+            width: 100vw;
+            height: 100vh;
+            border-radius: 0;
+        }
+    }
+
+}

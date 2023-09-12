@@ -1,0 +1,137 @@
+.Button:not(.Blank) {
+    font-size: 0.9rem;
+    display: inline-flex;
+    position: relative;
+    align-items: center;
+    justify-content: center;
+    padding: 0rem 0.8rem;
+    height: 2rem;
+    border-radius: 0.3rem;
+    transition: all 0.1s ease-in-out;
+    text-decoration: none;
+    font-family: var(--page-font-family);
+    font-size: 0.9rem;
+    white-space: nowrap;
+    color: black;
+
+    // Default flavor: Hollow
+    background-color: transparent;
+    border: 1px solid var(--color-control-rim);
+
+    @media (pointer: coarse) {
+        min-height: 2.5rem;
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
+
+    &:hover {
+        background-color: rgb(213, 231, 248);
+    }
+
+    &:disabled {
+        background-color: transparent;
+        color: rgb(199, 199, 199);
+        border-color: var(--color-page-hairline);
+    }
+
+    &.Solid {
+        background-color: var(--color-contrast-block-bg);
+        color: var(--color-contrast-block-text);
+        border: 1px solid var(--color-contrast-block-bg);
+
+        &:hover {
+            background-color: var(--color-contrast-block-hover-bg);
+        }
+
+        &:disabled {
+            background-color: var(--color-contrast-block-disabled-bg);
+            border-color: var(--color-contrast-block-disabled-bg);
+        }
+    }
+
+    &.Link {
+
+        @media (pointer: fine) {
+            padding-top: 0;
+            padding-bottom: 0;
+        }
+
+        background-color: transparent;
+        color: rgb(0, 79, 182);
+        border: none;
+        font-weight: bold;
+        cursor: pointer;
+
+        &:hover {
+            color: rgb(59, 144, 255);
+            text-decoration: underline;
+        }
+
+        label {
+            cursor: pointer;
+        }
+    }
+
+    &>.Inliner {
+        overflow: hidden;
+        width: 0;
+    }
+
+    &.MarginLeft {
+        margin-left: 0.3rem;
+    }
+
+    &.MarginRight {
+        margin-right: 0.3rem;
+    }
+
+    &.MarginBottom {
+        margin-bottom: 0.5rem;
+    }
+
+    &>.Icon {
+        &.Left {
+            &:not(:last-child) {
+                margin-right: 0.3rem;
+            }
+        }
+
+        &.Right {
+            margin-left: 0.3rem;
+        }
+    }
+
+    &>.DropDown {
+        display: flex;
+        align-items: center;
+        margin-left: 0.5rem;
+        margin-right: -0.4rem;
+    }
+
+    &>.BusySpinner {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: absolute;
+        width: 100%;
+        height: 100%;
+    }
+
+    &.Busy>*:not(.BusySpinner) {
+        visibility: hidden;
+    }
+
+    &.Select {
+        padding-top: 0.1rem;
+        padding-bottom: 0.1rem;
+
+        select {
+            font-size: 0.9rem;
+            border: none;
+            background-color: transparent;
+            height: 1.7rem;
+        }
+
+    }
+
+}
