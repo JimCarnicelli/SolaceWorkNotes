@@ -1,5 +1,5 @@
-import { DbTable } from '@/db/dbServer';
-import { Guid } from '@/db/dbShared';
+import { DbTable } from '@/lib/db/dbServer';
+import { Guid } from '@/lib/db/dbShared';
 
 /** One database table definition */
 
@@ -8,6 +8,7 @@ export type UserRow = {
     name?: string,
     created_at?: Date,
     update_at?: Date,
+    deleted?: boolean,
 }
 
 /** Users are people who can log in and do stuff */

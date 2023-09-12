@@ -149,7 +149,8 @@ const databaseScripts: { [key: string]: MigrationScript | undefined } = {
                 id UUID NOT NULL,
                 name CHARACTER VARYING(100) NOT NULL,
                 created_at TIMESTAMP WITH TIME ZONE NOT NULL,
-                update_at TIMESTAMP WITH TIME ZONE NOT NULL
+                update_at TIMESTAMP WITH TIME ZONE NOT NULL,
+                deleted boolean NOT NULL DEFAULT false
             );
 
             INSERT INTO user_ (
