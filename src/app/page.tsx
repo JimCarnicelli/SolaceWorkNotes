@@ -1,4 +1,4 @@
-import { doAThing } from '@/db/entities/User'
+import { runMigrationScripts as runDbMigrations } from '@/db/dbMigrations';
 import styles from './page.module.scss'
 import { Metadata } from 'next'
 
@@ -9,8 +9,9 @@ export const metadata: Metadata = {
 
 async function getStuff() {
 
-    //await doAThing();
-    
+    //TODO: Find a better place for this to minimize redundate execution
+    await runDbMigrations();
+
     const ret = {
         value: 'xyz',
     }
