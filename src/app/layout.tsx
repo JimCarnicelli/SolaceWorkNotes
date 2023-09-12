@@ -6,7 +6,7 @@ type Props = {
 
 export default function RootLayout(props: Props) {
     return (
-        <html lang="en">
+        <html lang='en'>
             <body>{props.children}</body>
         </html>
     );

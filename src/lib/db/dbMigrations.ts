@@ -1,16 +1,17 @@
-import { dbCore } from "./dbServer";
+import { dbCore } from '@/lib/db/dbServer';
 
 /**
  * Simplified database migration script engine
  * 
- * The scripts are just hard-coded at the bottom of this file for simplicity. Place a
- * 'STOP HERE':undefined element anywhere in that list (object) to prevent forward 
+ * The scripts are imported at the bottom of this file for simplicity. Place a
+ * stopHere() function call anywhere in that statement list to prevent forward 
  * execution of 'up' scripts. But also to roll back any scripts after it that were 
  * previously executed using the 'down' versions of those scripts.
  * 
- * */
+ */
 export async function runMigrationScripts() {
-    const scriptNames = Object.keys(databaseScripts);
+    console.log('- Running migration scripts');
+    const scriptNames = Object.keys(migrationScripts);
     let lastScript = '';
 
     for (let i = 0; i < scriptNames.length; i++) {
@@ -26,7 +27,8 @@ export async function runMigrationScripts() {
     `)) === 1;
 
     await rollBackward(lastScript, initialScriptExecuted);
-    await rollForward(lastScript, initialScriptExecuted);
+    if (lastScript !== '')
+        await rollForward(lastScript, initialScriptExecuted);
 }
 
 /** Roll updates backward to the last active script before 'STOP HERE' */
@@ -41,13 +43,13 @@ async function rollBackward(lastScript: string, initialScriptExecuted: boolean) 
 
     // If we can't find the last script in the current list then we haven't 
     // updated to that point yet. No scripts need to be rolled back.
-    if (!migrationNames.find(name => name === lastScript)) return;
+    if (lastScript !== '' && !migrationNames.find(name => name === lastScript)) return;
 
     for (let i = migrationNames.length - 1; i >= 0; i--) {
         const scriptName = migrationNames[i];
         if (scriptName === lastScript) return;  // Don't go back any farther
 
-        const script = databaseScripts[scriptName];
+        const script = migrationScripts[scriptName];
         if (!script) {
             console.log(`- Migration script not found to roll back: '${scriptName}'`);
             continue;
@@ -57,10 +59,12 @@ async function rollBackward(lastScript: string, initialScriptExecuted: boolean) 
         try {
             console.log(`- Rolling back migration '${scriptName}'`);
             await dbCore.query(sql);
-            await dbCore.query(`
-                DELETE FROM _migrations
-                WHERE name = ${dbCore.safeValue(scriptName)}
-            `);
+            if (i > 0) {  // There won't be a _migrations table after we roll back the first script
+                await dbCore.query(`
+                    DELETE FROM _migrations
+                    WHERE name = ${dbCore.safeValue(scriptName)}
+                `);
+            }
         } catch (err: any) {
             console.error(`Error in DB script '${scriptName}':`, err);
             return;
@@ -71,7 +75,7 @@ async function rollBackward(lastScript: string, initialScriptExecuted: boolean) 
 
 /** Roll updates forward until 'STOP HERE' marker */
 async function rollForward(lastScript: string, initialScriptExecuted: boolean) {
-    const scriptNames = Object.keys(databaseScripts);
+    const scriptNames = Object.keys(migrationScripts);
 
     for (let i = 0; i < scriptNames.length; i++) {
         const scriptName = scriptNames[i];
@@ -88,7 +92,7 @@ async function rollForward(lastScript: string, initialScriptExecuted: boolean) {
         }
         if (!scriptExecuted) {
 
-            const sql = databaseScripts[scriptName]!.up;
+            const sql = migrationScripts[scriptName]!.up;
             try {
                 console.log(`- Rolling forward migration script '${scriptName}'`);
                 await dbCore.query(sql);
@@ -111,66 +115,31 @@ async function rollForward(lastScript: string, initialScriptExecuted: boolean) {
     }
 }
 
-type MigrationScript = {
+export type MigrationScript = {
     /** Run this to apply this script's changes */
     up: string,
     /** Run this to un-apply this script's changes */
     down: string,
 }
 
+export type MigrationScriptSeries = { [name: string]: MigrationScript | undefined }
+
 /** Sequence of database scripts to apply to the database to bring it up to the current version */
-const databaseScripts: { [key: string]: MigrationScript | undefined } = {
+let migrationScripts: MigrationScriptSeries = {};
 
-    //--------------------------------------------------------------------------------
-    '2023-09-11 - Initialization': {
-        up: `
+/** Import the given script and add it to the series */
+function addScript(name: string) {
+    const script: MigrationScript = require('@/lib/db/migrations/' + name).script;
+    migrationScripts[name] = script;
+}
 
-            CREATE TABLE _migrations (
-                name TEXT NOT NULL PRIMARY KEY,
-                executed_at timestamp with time zone NOT NULL
-            );
+/** Migrations should not go forward past this and should roll backward to this */
+function stopHere() {
+    migrationScripts['STOP HERE'] = undefined;
+}
 
-        `,
-        //----------------------------------------
-        down: `
 
-            DROP TABLE _migrations;
-
-        `
-    },
-
-    //'STOP HERE': undefined,  // Every script after this will be ignored
-
-    //--------------------------------------------------------------------------------
-    '2023-09-11 - First tables': {
-        up: `
-
-            CREATE TABLE user_ (
-                id UUID NOT NULL,
-                name CHARACTER VARYING(100) NOT NULL,
-                created_at TIMESTAMP WITH TIME ZONE NOT NULL,
-                update_at TIMESTAMP WITH TIME ZONE NOT NULL,
-                deleted boolean NOT NULL DEFAULT false
-            );
-
-            INSERT INTO user_ (
-                id, name, created_at, update_at
-            ) VALUES (
-                'acf4adb2-1397-47a7-92ae-8336b22556e6',
-                'Caregiving Cathy',
-                '2023-09-11 21:15:38.063838-04',
-                '2023-09-11 21:15:38.063838-04'
-            );
-
-        `,
-        //----------------------------------------
-        down: `
-
-            DROP TABLE user_;
-
-        `
-    },
-
-    'STOP HERE': undefined,  // Roll forward or backward to this point
-
-};
+//----- Register all scripts here in the order they should execute -----//
+addScript('2023-09-11 - 01 - Initialization');
+addScript('2023-09-11 - 02 - First tables');
+stopHere();

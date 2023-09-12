@@ -1,6 +1,6 @@
-import { apiClient } from "@/lib/apiClient";
-import { Guid } from "@/lib/db/dbShared";
-import { UserRow } from "@/lib/db/entities/UserTable";
+import { apiClient } from '@/lib/apiClient';
+import { Guid } from '@/lib/db/dbShared';
+import { UserRow } from '@/lib/db/entities/UserTable';
 
 export namespace apiUserGet {
 

@@ -12,13 +12,7 @@ export type FetchParams = {
     sortColumn?: string,
     sortDescending?: boolean,
     filterText?: string,
-    includeDisabled?: boolean,
     order?: string,
-
-    // Page-specific
-    //TODO: Find a less hacky way to do these
-    groupByDesign?: string,  // Group by design (blank or 'N')
-    store?: string,
 };
 
 export type UseFetchProps<T> = {
@@ -64,9 +58,6 @@ export function useFetch<T>(props: UseFetchProps<T>, dependencies?: DependencyLi
         sortColumn: props.fetchParams?.sortColumn,
         sortDescending: !!props.fetchParams?.sortDescending,
         filterText: props.fetchParams?.filterText,
-        groupByDesign: props.fetchParams?.groupByDesign,
-        includeDisabled: props.fetchParams?.includeDisabled,
-        store: props.fetchParams?.store,
     }), []);  // eslint-disable-line react-hooks/exhaustive-deps
 
     const defaultFetchParamsJson = useMemo<string>(
