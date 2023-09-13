@@ -1,20 +1,22 @@
 import { apiClient } from '@/lib/utilities/apiClient';
 import { Guid, PagedRowset } from '@/lib/db/dbShared';
-import { UserRow } from '@/lib/db/entities/UserTable';
+import { EncounterNoteRow } from '@/lib/db/entities/EncounterNoteTable';
 
-export namespace apiUserList {
+export namespace apiEncounterNoteList {
 
     export type Params = {
         skip?: number,
         take?: number,
         filterText?: string,
+        encounterId?: Guid,
         advocateId?: Guid,
+        clientId?: Guid,
     }
 
     export type Return = {
-        list?: PagedRowset<UserRow>,
+        list?: PagedRowset<EncounterNoteRow>,
     }
 
-    const url = 'api/user/list';
+    const url = 'api/encounter/note/list';
     export const call = async (params?: Params) => await apiClient.fetch<Params, Return>(url, params);
 }

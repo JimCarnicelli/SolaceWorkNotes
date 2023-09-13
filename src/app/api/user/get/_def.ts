@@ -9,7 +9,7 @@ export namespace apiUserGet {
     }
 
     export type Return = {
-        user?: UserRow,
+        item?: UserRow,
     }
 
     const url = 'api/user/get';

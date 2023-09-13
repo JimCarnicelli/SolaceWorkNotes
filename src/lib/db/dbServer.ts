@@ -502,10 +502,17 @@ WITH rows AS (
         if (requireOne && !colNames.length) throw new Error('Expecting at least one column to filter by');
         let whereClause = colNames.map(colName => {
             const value = filters[colName];
-            if (value === undefined || value === null)
+            // If the value is undefined then treat it as not a filter
+            if (value === undefined)
+                return undefined;
+            // If the value is null then treat it as an actual filter checking for a NULL value
+            if (value === null)
                 return `${columnPrefix ? columnPrefix + '.' : ''}${this.safeName(colName)} IS NULL`;
+            // Any other type of value filters for an exact match
             return `${columnPrefix ? columnPrefix + '.' : ''}${this.safeName(colName)} = ${this.safeValue(value)}`;
-        }).join('\n' + indent + 'AND ');
+        })
+            .filter(f => f !== undefined)  // Strip out any non-filters
+            .join('\n' + indent + 'AND ');
         if (whereClause === '') whereClause = '1=1';
         if (alsoWhere !== '') whereClause = '(\n' + whereClause + ')\n' + alsoWhere;
 
@@ -587,7 +594,7 @@ WITH rows AS (
 
     /** Construct a WHERE clause for a Google-like keyword search across potentially multiple fields */
     textSearchFilter(filterText: string | undefined, columns: string[]) {
-        if (!filterText) return 'AND 1=1';
+        if (!filterText) return '1=1';
 
         // Parse the terms
         let terms: string[] = [];
@@ -599,12 +606,12 @@ WITH rows AS (
 
         // Construct and return the SQL
         const sql = terms
-            .map(term => 'AND (\n  ' + columns
+            .map(term => '(\n  ' + columns
                 .map(col => {
                     return `LOWER(${this.safeName(col)}) LIKE ${term}`;
                 })
                 .join(' OR ') + '\n)')
-            .join('\n');
+            .join('\nAND ');
         return sql;
     }
 

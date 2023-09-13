@@ -158,15 +158,15 @@
                 }
 
                 &.Selected {
-                    background-color: rgb(225, 225, 225);
+                    background-color: var(--color-grid-row-selected-bg);
                 }
 
                 &:hover {
-                    background-color: rgb(226, 246, 255);
+                    background-color: var(--color-grid-row-hover-bg);
                 }
 
                 &:not(:first-child) {
-                    border-top: 1px solid rgb(240, 240, 240);
+                    border-top: 1px solid var(--color-grid-row-divider);
                 }
             }
 
@@ -198,11 +198,11 @@
                 }
 
                 &.Selected {
-                    background-color: rgb(225, 225, 225);
+                    background-color: var(--color-grid-row-selected-bg);
                 }
 
                 &:first-child {
-                    border-top: 1px solid rgb(240, 240, 240);
+                    border-top: 1px solid var(--color-grid-row-divider);
                 }
             }
         }
@@ -214,7 +214,7 @@
                 tr.DataRow,
                 div.DataRow {
                     &:hover {
-                        background-color: rgb(226, 246, 255);
+                        background-color: var(--color-grid-row-hover-bg);
 
                     }
                 }
@@ -249,7 +249,7 @@
             border-radius: 0.4rem;
             overflow: hidden;
             transition: var(--transition-basic);
-            color: black;
+            color: var(--color-grid-row-text);
 
             &.Selectable {
 
@@ -319,8 +319,8 @@
             }
 
             &:hover {
-                border-color: rgb(50, 114, 151);
-                background-color: rgb(229, 243, 243);
+                border-color: var(--color-tile-rim);
+                background-color: var(--color-tile-hover-bg);
                 box-shadow: 0rem 0.5rem 1rem rgba(0, 0, 0, 0.2);
                 transform: scale(1.01) translate(-0.02rem, -0.1rem);
             }

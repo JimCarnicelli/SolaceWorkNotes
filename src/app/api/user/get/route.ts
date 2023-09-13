@@ -5,6 +5,6 @@ import { userGet } from './userGet';
 /** One API endpoint */
 export const POST = apiServer.handler<apiUserGet.Params, apiUserGet.Return>(async (req) => {
     return {
-        user: await userGet(req.p.id),
+        item: await userGet(req.p.id),
     };
 });

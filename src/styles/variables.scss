@@ -41,37 +41,19 @@ body {
     --color-control-text: black;
     --color-control-rim: #e2e2e2;
     --color-control-focus-rim: blue;
-}
 
-.ManagementFlavor {
-    --color-page-bg: #FFFAF0;
-    --color-page-bg-soft: #f5efe4;
-    --color-page-text: black;
-    --color-page-text-soft: #d8d2ca;
-    --color-page-text-barely: #e6e0d8;
-    --color-page-link: #215F6B;
-    --color-page-link-hover: #22b872;
-    --color-page-hover-bg: #ece4d5;
-    --color-page-hairline: #e6e0d8;
+    --color-button-hover-bg: rgb(213, 231, 248);
+    --color-button-disabled-text: rgb(199, 199, 199);
+    --color-button-link-text: rgb(0, 79, 182);
+    --color-button-link-hover-text: rgb(59, 144, 255);
 
-    --color-header-bg: #12363D;
-    --color-header-text: white;
-    --color-header-hover-bg: #26565f;
-    --color-header-divider: #395960;
-    --color-header-hover-divider: #4d727a;
-    --color-header-toggle-bg: #FF8642;
-    --color-header-toggle-text: white;
-    --color-header-toggle-hover-bg: #f0b638;
+    --color-grid-row-text: black;
+    --color-grid-row-selected-bg: rgb(225, 225, 225);
+    --color-grid-row-hover-bg: rgb(226, 246, 255);
+    --color-grid-row-divider: rgb(240, 240, 240);
 
-    --color-contrast-block-bg: #26565f;
-    --color-contrast-block-text: white;
-    --color-contrast-block-hover-bg: #34848a;
-    --color-contrast-block-disabled-bg: #a39d8d;
-
-    --color-control-bg: white;
-    --color-control-text: black;
-    --color-control-rim: #e6e0d8;
-    --color-control-focus-rim: blue;
+    --color-tile-hover-rim: rgb(50, 114, 151);
+    --color-tile-hover-bg: rgb(229, 243, 243);
 }
 
 

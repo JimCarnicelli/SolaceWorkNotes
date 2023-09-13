@@ -142,4 +142,5 @@ function stopHere() {
 //----- Register all scripts here in the order they should execute -----//
 addScript('2023-09-11 - 01 - Initialization');
 addScript('2023-09-11 - 02 - First tables');
+addScript('2023-09-12 - 01 - Sample data');
 stopHere();

@@ -13,7 +13,7 @@ export default function TestComponent() {
                 id: 'acf4adb2-1397-47a7-92ae-8336b22556e6',
             });
             console.log(ret);
-            setUser(ret.user);
+            setUser(ret.item);
         }
         fn();
     }, []);

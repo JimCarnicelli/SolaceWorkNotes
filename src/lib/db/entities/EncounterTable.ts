@@ -7,11 +7,15 @@ export type EncounterRow = {
     id?: Guid,
     advocate_id?: Guid,
     client_id?: Guid,
+    summary?: string,
     initiated_by_advocate?: boolean,
     started_at?: Date,
     created_at?: Date,
     updated_at?: Date,
     deleted?: boolean,
+
+    // Derived columns
+    notes_count?: number,
 }
 
 /** An encounter is an appointment, stay, or other continuous event involving advocate and client */

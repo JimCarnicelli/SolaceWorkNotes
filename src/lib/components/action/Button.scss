@@ -25,12 +25,12 @@
     }
 
     &:hover {
-        background-color: rgb(213, 231, 248);
+        background-color: var(--color-button-hover-bg);
     }
 
     &:disabled {
         background-color: transparent;
-        color: rgb(199, 199, 199);
+        color: var(--color-button-disabled-text);
         border-color: var(--color-page-hairline);
     }
 
@@ -57,13 +57,13 @@
         }
 
         background-color: transparent;
-        color: rgb(0, 79, 182);
+        color: var(--color-button-link-text);
         border: none;
         font-weight: bold;
         cursor: pointer;
 
         &:hover {
-            color: rgb(59, 144, 255);
+            color: var(--color-button-link-hover-text);
             text-decoration: underline;
         }
 
