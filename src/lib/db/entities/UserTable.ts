@@ -11,6 +11,10 @@ export type UserRow = {
     created_at?: Date,
     updated_at?: Date,
     deleted?: boolean,
+
+    // Derived columns
+    started_at?: Date,
+    latest_at?: Date,
 }
 
 /** Users are people who can log in and do stuff */

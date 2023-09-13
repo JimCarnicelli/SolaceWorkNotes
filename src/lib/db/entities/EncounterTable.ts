@@ -1,6 +1,20 @@
 import { DbTable } from '@/lib/db/dbServer';
 import { Guid } from '@/lib/db/dbShared';
 
+export enum EncounterStatus {
+    unresolved = 0,
+    completed = 1,
+    declined = 2,
+    pending = 3,
+}
+
+export const encounterStatusTitles = [
+    'Unresolved',
+    'Completed',
+    'Declined',
+    'Pending',
+];
+
 /** One database table definition */
 
 export type EncounterRow = {
@@ -8,6 +22,7 @@ export type EncounterRow = {
     advocate_id?: Guid,
     client_id?: Guid,
     summary?: string,
+    status?: EncounterStatus,
     initiated_by_advocate?: boolean,
     started_at?: Date,
     created_at?: Date,

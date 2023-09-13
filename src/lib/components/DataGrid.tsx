@@ -322,12 +322,6 @@ export default function DataGrid<T>(props: Props<T>) {
             <div className='Content'>
                 {containerEl}
             </div>
-            {topPagerEl && (
-                <div className='TopBar Bottom'>
-                    {pageSummaryEl}
-                    {topPagerEl}
-                </div>
-            )}
         </div>
     </>);
 }

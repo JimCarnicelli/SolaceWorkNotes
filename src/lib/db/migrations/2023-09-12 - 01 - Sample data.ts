@@ -35,12 +35,13 @@ INSERT INTO encounter (
 );
 
 INSERT INTO encounter_note (
-    id, encounter_id, type, message, submitted_at, created_at, updated_at
+    id, encounter_id, submitted_by_id, type, message, submitted_at, created_at, updated_at
 ) VALUES (
     'c3d6a118-4125-4851-ba23-a511e861259c',
     '77624181-1fe3-4fc6-9f37-99a0363cb20a',
+    'a0bc7321-899c-421c-87b6-e0e1a9524076',
     1,  -- Direct message
-    'Hey there. Can you help me? I don\'\'t feel so good.',
+    'Hey there. Can you help me?\n\nI don\'\'t *feel* so good.',
     '2023-09-11 21:15:38-04',
     '2023-09-11 21:15:38-04',
     '2023-09-11 21:15:38-04'
@@ -69,12 +70,13 @@ INSERT INTO encounter (
 );
 
 INSERT INTO encounter_note (
-    id, encounter_id, type, message, submitted_at, created_at, updated_at
+    id, encounter_id, submitted_by_id, type, message, submitted_at, created_at, updated_at
 ) VALUES (
     '261a8fea-c8f0-4fbe-8447-f157ac013666',
     '912b509a-d62e-46b5-960f-6848dc8fb08b',
+    '4b7ca888-6716-457f-bdc2-eb759764c4a9',
     1,  -- Direct message
-    'It hurts when I hit my head like this. Can you help?',
+    'It hurts when I hit my head like this.\n\nCan you help?',
     '2023-09-12 10:15:38-04',
     '2023-09-12 10:15:38-04',
     '2023-09-12 10:15:38-04'

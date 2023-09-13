@@ -24,6 +24,7 @@ CREATE TABLE encounter (
     advocate_id UUID NOT NULL,
     client_id UUID NOT NULL,
     summary TEXT,
+    status INT NOT NULL DEFAULT 0,
     initiated_by_advocate BOOLEAN NOT NULL DEFAULT false,
     started_at TIMESTAMP WITH TIME ZONE NOT NULL,
     completed_at TIMESTAMP WITH TIME ZONE,
@@ -63,12 +64,16 @@ CREATE TABLE encounter_note (
     type INT NOT NULL DEFAULT 1,  -- Direct message
     message TEXT,
     submitted_at TIMESTAMP WITH TIME ZONE,
-    advocate_read_at TIMESTAMP WITH TIME ZONE,
-    client_read_at TIMESTAMP WITH TIME ZONE,
+    submitted_by_id UUID NOT NULL,
+    read_at TIMESTAMP WITH TIME ZONE,
     created_at TIMESTAMP WITH TIME ZONE NOT NULL,
     updated_at TIMESTAMP WITH TIME ZONE NOT NULL,
     deleted boolean NOT NULL DEFAULT false,
     CONSTRAINT encounter_note_pkey PRIMARY KEY (id),
+    CONSTRAINT fk__encounter_note__submitted_by_id FOREIGN KEY (submitted_by_id)
+        REFERENCES user_ (id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION,
     CONSTRAINT fk__encounter_note__encounter FOREIGN KEY (encounter_id)
         REFERENCES encounter (id) MATCH SIMPLE
         ON UPDATE NO ACTION
