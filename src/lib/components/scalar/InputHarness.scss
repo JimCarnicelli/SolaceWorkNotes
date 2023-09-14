@@ -46,6 +46,19 @@
                     background-color: var(--color-control-bg);
                     border: 1px solid var(--color-control-rim);
                     overflow: hidden;
+
+                    &.Padded {
+                        padding: 0 0.5rem;
+                    }
+                }
+
+                &.SimTextBox {
+                    font-size: 0.9rem;
+                    width: 100%;
+                    height: calc(2rem);
+                    padding: 0.325rem 0.5rem;
+                    background-color: transparent;
+                    font-family: var(--page-font-family);
                 }
 
                 // Iconic button before or after the textbox

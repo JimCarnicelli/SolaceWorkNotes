@@ -1,0 +1,69 @@
+.Tooltip {
+    --tooltipBackground: #f7f4e8;
+    --tooltipBorder: #c0c0c0;
+    --tooltipColor: #000;
+    --arrow-box-width: 20px;
+    --arrow-offset: -16px;
+
+    border-radius: 0.25rem;
+    border: 1px solid var(--tooltipBorder);
+    box-shadow: 0rem 0.5rem 1rem rgba(0, 0, 0, 0.2);
+    background-color: var(--tooltipBackground);
+    color: var(--tooltipColor);
+    display: flex;
+    flex-direction: column;
+    padding: 0.4rem;
+    transition: opacity 0.3s;
+    z-index: 999999;
+    pointer-events: none;
+
+    .Arrow {
+        position: absolute;
+        width: var(--arrow-box-width);
+        height: var(--arrow-box-width);
+
+        div {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: var(--arrow-box-width);
+            height: var(--arrow-box-width);
+        }
+    }
+
+    /* This is when the popup is above the content */
+    &[data-popper-placement^='top']>.Arrow {
+        bottom: var(--arrow-offset);
+
+        div {
+            transform: rotate(180deg);
+        }
+    }
+
+    /* This is when the popup is below the content */
+    &[data-popper-placement^='bottom']>.Arrow {
+        top: var(--arrow-offset);
+
+        div {
+            transform: rotate(0deg);
+        }
+    }
+
+    /* This is when the popup is to the left of the content */
+    &[data-popper-placement^='left']>.Arrow {
+        right: var(--arrow-offset);
+
+        div {
+            transform: rotate(90deg);
+        }
+    }
+
+    /* This is when the popup is to the right of the content */
+    &[data-popper-placement^='right']>.Arrow {
+        left: var(--arrow-offset);
+
+        div {
+            transform: rotate(-90deg);
+        }
+    }
+}

@@ -1,7 +1,9 @@
+'use client';
 import {
     createContext, Dispatch, FunctionComponent, PropsWithChildren,
     SetStateAction, useCallback, useContext, useState
 } from 'react';
+import { TooltipState } from './useTooltip';
 
 type GlobalStateStore = { [key: string]: any };
 
@@ -13,6 +15,8 @@ export interface GlobalStateContext {
     setState: <S>(componentName: string, key: string, value: SetStateAction<S>) => void,
     clearStates: (componentName: string) => void,
     debugAllStates: (prefix?: string) => GlobalStateStore,
+    tooltipState: TooltipState | undefined,
+    setTooltipState: Dispatch<SetStateAction<TooltipState | undefined>>,
 }
 
 export const globalStateContext = createContext<GlobalStateContext | undefined>(undefined);
@@ -58,11 +62,16 @@ export const useGlobalState = (componentName: string) => {
         /** Returns an optionally filtered set of the global state for read-only debugging */
         debugAllStates: () => context?.debugAllStates() ?? {},
 
+        tooltipState: context?.tooltipState,
+        setTooltipState: context?.setTooltipState,
+
     };
 }
 
 export const GlobalStateContextProvider: FunctionComponent<PropsWithChildren> = ({ children }) => {
     const [globalStates, setGlobalStates] = useState<GlobalStateStore>({});
+
+    const [tooltipState, setTooltipState] = useState<TooltipState>();
 
     const getState = useCallback((componentName: string, key: string, initialValue?: UseStateInitialValue<any>): any => {
         const stateKey = `${componentName}/${key}`;
@@ -115,7 +124,8 @@ export const GlobalStateContextProvider: FunctionComponent<PropsWithChildren> = 
 
     return (
         <globalStateContext.Provider value={{
-            getState, setState, clearStates, debugAllStates
+            getState, setState, clearStates, debugAllStates,
+            tooltipState, setTooltipState,
         }}>
             {children}
         </globalStateContext.Provider>

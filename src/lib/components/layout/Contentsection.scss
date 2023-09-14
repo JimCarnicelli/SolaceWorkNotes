@@ -1,0 +1,106 @@
+@import '@/styles/variables.scss';
+
+.ContentSection {
+
+    &>h2 {
+        display: flex;
+        align-items: center;
+        padding-top: 1.5rem;
+        padding-bottom: 0.5rem;
+        font-size: 1.6rem;
+        font-weight: normal;
+        transition: var(--transition-basic);
+        border-bottom: 1px solid transparent;
+
+        @media (max-width: $mobile-breakpoint) {
+            font-size: 1.2rem;
+        }
+
+        &>.Title {
+            flex-grow: 1;
+            display: flex;
+            align-items: center;
+
+            &>.Thumbnail:first-child {
+                margin-right: 0.5rem;
+            }
+        }
+
+        &>.Expander {
+            display: flex;
+            align-items: center;
+            transition: var(--transition-basic-half);
+        }
+
+    }
+
+    &.Gapless {
+        &>h2 {
+            padding-top: 0;
+        }
+    }
+
+    &>.Drawer {
+        &>.Content {
+            &>.Toolbar {
+                margin-left: 1rem;
+                margin-top: 0.5rem;
+                margin-bottom: 1rem;
+            }
+        }
+
+    }
+
+    &.Expandable {
+        h2 {
+            cursor: default;
+
+            @media (min-width: $mobile-breakpoint) {
+                &:hover {
+                    background-color: var(--color-page-hover-bg);
+                }
+            }
+
+        }
+
+        &>.Drawer {
+
+            // Only want this hiding during the animation. Otherwise it chops off the fringes of useful content.
+            &.InMotion {
+                overflow: hidden;
+            }
+
+            &>.Content {
+                transition: var(--transition-basic-half);
+            }
+        }
+    }
+
+    &.Expanded {
+        .Expander {
+            transform: rotate(90deg);
+        }
+    }
+
+    &.Collapsed {
+        h2 {
+            border-bottom-color: var(--color-page-hairline);
+        }
+
+        &>.Drawer {
+            &>.Content {
+                opacity: 0;
+            }
+
+            // Once collapsed and after the animation is done get 
+            // the content way out of the way and not just opacity=0
+            &:not(.InMotion) {
+                &>.Content {
+                    visibility: hidden;
+                    pointer-events: none;
+                }
+            }
+        }
+    }
+
+}

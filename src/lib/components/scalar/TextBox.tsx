@@ -14,7 +14,7 @@ export type InputKeyEvent = {
 
 export type TextBoxProps = InputHarnessProps<string> & {
     inputRef?: MutableRefObject<HTMLElement | null>,
-    type?: 'Multiline' | 'Text' | 'Password' | 'Email',
+    type?: 'Multiline' | 'Text' | 'Password' | 'Email' | 'Date' | 'Time',
     name?: string,
     placeholder?: string,
     disabled?: boolean,
@@ -98,7 +98,12 @@ export function TextBox(props: TextBoxProps) {
     let inputType = props.type?.toLowerCase();
     if (showPassword) inputType = 'text';
 
-    const withClear = props.type !== 'Multiline' && value !== '' && !props.disabled;
+    const withClear =
+        props.type !== 'Multiline' &&
+        props.type !== 'Date' &&
+        props.type !== 'Time' &&
+        value !== '' &&
+        !props.disabled;
 
     function onChange(ev: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
         let v: string | undefined = ev.target.value;

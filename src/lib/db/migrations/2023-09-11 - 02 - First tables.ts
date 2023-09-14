@@ -30,7 +30,7 @@ CREATE TABLE encounter (
     completed_at TIMESTAMP WITH TIME ZONE,
     created_at TIMESTAMP WITH TIME ZONE NOT NULL,
     updated_at TIMESTAMP WITH TIME ZONE NOT NULL,
-    deleted boolean NOT NULL DEFAULT false,
+    deleted BOOLEAN NOT NULL DEFAULT false,
     CONSTRAINT encounter_pkey PRIMARY KEY (id),
     CONSTRAINT fk__encounter__advocate FOREIGN KEY (advocate_id)
         REFERENCES user_ (id) MATCH SIMPLE
@@ -63,12 +63,13 @@ CREATE TABLE encounter_note (
     encounter_id UUID NOT NULL,
     type INT NOT NULL DEFAULT 1,  -- Direct message
     message TEXT,
+    personal BOOLEAN DEFAULT FALSE,
     submitted_at TIMESTAMP WITH TIME ZONE,
     submitted_by_id UUID NOT NULL,
     read_at TIMESTAMP WITH TIME ZONE,
     created_at TIMESTAMP WITH TIME ZONE NOT NULL,
     updated_at TIMESTAMP WITH TIME ZONE NOT NULL,
-    deleted boolean NOT NULL DEFAULT false,
+    deleted BOOLEAN NOT NULL DEFAULT false,
     CONSTRAINT encounter_note_pkey PRIMARY KEY (id),
     CONSTRAINT fk__encounter_note__submitted_by_id FOREIGN KEY (submitted_by_id)
         REFERENCES user_ (id) MATCH SIMPLE

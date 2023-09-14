@@ -1,5 +1,5 @@
 import './FormMessages.scss';
-import { FormHook } from '@/lib/utilities/useForm'
+import { FormHook } from '@/lib/hooks/useForm'
 import { icons } from '@/lib/components/graphics/Icon'
 
 type Props = {

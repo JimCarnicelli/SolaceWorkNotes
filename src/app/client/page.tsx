@@ -7,10 +7,12 @@ import DataGrid, { dataGridRenderDataRow } from '@/lib/components/DataGrid';
 import { useRouter } from 'next/navigation';
 import { apiEncounterNoteList } from '../api/encounter/note/list/_def';
 import { EncounterNoteRow } from '@/lib/db/entities/EncounterNoteTable';
-import { toFullDate, toFullDateTime, toShortDate } from '@/lib/utilities/dateTime';
-import { encounterStatusTitles } from '@/lib/db/entities/EncounterTable';
-import { MarkdownViewer } from '@/lib/components/scalar/MarkdownViewer';
-import Link from 'next/link';
+import { toFullDate } from '@/lib/utilities/dateTime';
+import { EditNote } from './EditNote';
+import { useState } from 'react';
+import { BasicPage } from '@/lib/components/layout/BasicPage';
+import { NoteRow } from './NoteRow';
+import { ContentSection } from '@/lib/components/layout/ContentSection';
 
 const defaultPageSize = 10;
 
@@ -18,6 +20,10 @@ export default function Page() {
 
     const router = useRouter();
 
+    const [showEditNote, setShowEditNote] = useState(false);
+    const [selectedNote, setSelectedNote] = useState<EncounterNoteRow>();
+
+    //--------------------------------------------------------------------------------
     const fetchUsers = useFetch({
         fetch: (p) => apiUserList.call({
             ...p,
@@ -26,6 +32,7 @@ export default function Page() {
         pageSize: defaultPageSize,
     }, [currentUserId]);
 
+    //--------------------------------------------------------------------------------
     const fetchNotes = useFetch({
         fetch: (p) => apiEncounterNoteList.call({
             ...p,
@@ -34,64 +41,56 @@ export default function Page() {
         pageSize: defaultPageSize,
     }, [currentUserId]);
 
+    //--------------------------------------------------------------------------------
+    function editNote(row: EncounterNoteRow) {
+        setSelectedNote(row);
+        setShowEditNote(true);
+    }
+
+    //--------------------------------------------------------------------------------
     return (
-        <main>
+        <BasicPage
+            title='My clients'
+        >
 
-            <h1>My clients</h1>
+            <ContentSection title='Clients' collapsable>
+                <DataGrid<UserRow>
+                    fetchHook={fetchUsers}
+                    rows={fetchUsers.data?.list}
+                    asTable
+                    withFilterText
+                    className='BasicTable HoverHighlight'
+                    renderHeader={() => [
+                        'Name', 'Since', 'Latest'
+                    ]}
+                    renderRow={row => dataGridRenderDataRow([
+                        row.data.name,
+                        toFullDate(row.data.started_at),
+                        toFullDate(row.data.latest_at),
+                    ], router, pageRoutes.clientView(row.data.id!))}
+                />
+            </ContentSection>
 
-            <DataGrid<UserRow>
-                fetchHook={fetchUsers}
-                rows={fetchUsers.data?.list}
-                asTable
-                withFilterText
-                className='BasicTable HoverHighlight'
-                renderHeader={() => [
-                    'Name', 'Since', 'Latest'
-                ]}
-                renderRow={row => dataGridRenderDataRow([
-                    row.data.name,
-                    toFullDate(row.data.started_at),
-                    toFullDate(row.data.latest_at),
-                ], router, pageRoutes.clientView(row.data.id!))}
+            <ContentSection title='Notes' collapsable>
+                <DataGrid<EncounterNoteRow>
+                    fetchHook={fetchNotes}
+                    rows={fetchNotes.data?.list}
+                    withFilterText
+                    renderRow={row => (
+                        <NoteRow
+                            row={row}
+                            onEditClick={() => editNote(row.data)}
+                        />
+                    )}
+                />
+            </ContentSection>
+
+            <EditNote
+                show={showEditNote}
+                setShow={setShowEditNote}
+                note={selectedNote}
             />
 
-            <h2>Notes</h2>
-
-            <DataGrid<EncounterNoteRow>
-                fetchHook={fetchNotes}
-                rows={fetchNotes.data?.list}
-                //asTable
-                withFilterText
-                className='BasicTable HoverHighlight'
-                renderRow={row => (<>
-                    {row.pageRowIndex > 0 && <hr/>}
-                    <div key={row.fullRowIndex} className='EncounterNote'>
-                        <div className='Encounter'>
-                            <label>Encounter: </label>
-                            {toFullDateTime(row.data.encounter_started_at)}
-                            {' | '}
-                            with <Link href={pageRoutes.clientView(row.data.encounter_client_id!)}>{row.data.encounter_client_name}</Link>
-                            {' | '}
-                            {row.data.encounter_initiated_by_advocate ? 'by Me' : 'by Client'}
-                            {' | '}
-                            {encounterStatusTitles[row.data.encounter_status!]}
-                            {' | '}
-                            {row.data.encounter_summary}
-                        </div>
-                        <div className='NoteSummary'>
-                            <label>Note: </label>
-                            {toFullDateTime(row.data.submitted_at)}
-                            {' | '}
-                            {row.data.submitted_by_id === currentUserId
-                                ? <span>by Me</span>
-                                : <span>by Client</span>
-                            }
-                        </div>
-                        <MarkdownViewer key={3} value={row.data.message} />
-                    </div>
-                </>)}
-            />
-
-        </main>
+        </BasicPage>
     );
 }

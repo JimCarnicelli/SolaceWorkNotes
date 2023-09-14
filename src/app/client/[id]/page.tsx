@@ -11,15 +11,16 @@ import { EncounterRow, encounterStatusTitles } from '@/lib/db/entities/Encounter
 import { pageRoutes } from '@/lib/pageRoutes';
 import { toFullDateTime } from '@/lib/utilities/dateTime';
 import { apiEncounterNoteList } from '@/app/api/encounter/note/list/_def';
-import { EncounterNoteRow, encounterNoteTypeTitles } from '@/lib/db/entities/EncounterNoteTable';
-import { MarkdownViewer } from '@/lib/components/scalar/MarkdownViewer';
-import { Dialog } from '@/lib/components/layout/Dialog';
+import { EncounterNoteRow, EncounterNoteType } from '@/lib/db/entities/EncounterNoteTable';
+import { EditNote } from '../EditNote';
+import { BasicPage } from '@/lib/components/layout/BasicPage';
+import { ContentSection } from '@/lib/components/layout/ContentSection';
+import { NoteRow } from '../NoteRow';
 import { Button } from '@/lib/components/action/Button';
-import { TextBox } from '@/lib/components/scalar/TextBox';
 import { icons } from '@/lib/components/graphics/Icon';
-import { InputHarness } from '@/lib/components/scalar/InputHarness';
 
-const defaultPageSize = 10;
+const encountersDefaultPageSize = 5;
+const notesDefaultPageSize = 10;
 
 type Props = {
     params: {
@@ -33,33 +34,61 @@ export default function Page(props: Props) {
     const router = useRouter();
 
     const [showEditNote, setShowEditNote] = useState(false);
+    const [selectedEncounter, setSelectedEncounter] = useState<EncounterRow>();
     const [selectedNote, setSelectedNote] = useState<EncounterNoteRow>();
 
+    //--------------------------------------------------------------------------------
     const fetchUser = useFetch({
         fetch: () => apiUserGet.call({ id: itemId }),
-    }, [itemId])
+    }, [itemId]);
 
+    //--------------------------------------------------------------------------------
     const fetchEncounters = useFetch({
         fetch: (p) => apiEncounterList.call({
             ...p,
             advocateId: currentUserId,
             clientId: itemId,
         }),
-        pageSize: defaultPageSize,
+        pageSize: encountersDefaultPageSize,
     }, [itemId]);
 
+    //--------------------------------------------------------------------------------
     const fetchNotes = useFetch({
         fetch: (p) => apiEncounterNoteList.call({
             ...p,
             advocateId: currentUserId,
             clientId: itemId,
+            encounterId: selectedEncounter?.id,
         }),
-        pageSize: defaultPageSize,
-    }, [itemId]);
+        pageSize: notesDefaultPageSize,
+    }, [itemId, selectedEncounter?.id]);
 
     //--------------------------------------------------------------------------------
     function editNote(row: EncounterNoteRow) {
         setSelectedNote(row);
+        setShowEditNote(true);
+    }
+
+    //--------------------------------------------------------------------------------
+    function newEncounter() {
+
+        setShowEditNote(true);
+    }
+
+    //--------------------------------------------------------------------------------
+    function newNote(encounter: EncounterRow) {
+        setSelectedNote({
+            encounter_id: encounter.id,
+            type: EncounterNoteType.caseNote,
+            submitted_by_id: currentUserId,
+            submitted_at: new Date(),
+            encounter_client_id: encounter.client_id,
+            encounter_client_name: encounter.client_name,
+            encounter_status: encounter.status,
+            encounter_initiated_by_advocate: encounter.initiated_by_advocate,
+            encounter_summary: encounter.summary,
+            encounter_started_at: encounter.started_at,
+        });
         setShowEditNote(true);
     }
 
@@ -73,151 +102,90 @@ export default function Page(props: Props) {
 
     //--------------------------------------------------------------------------------
     return (
-        <main>
+        <BasicPage
+            title={fetchUser.data.item.name}
+            goUpTitle='client list'
+            onGoUp={pageRoutes.clientList()}
+        >
 
-            <h1>{fetchUser.data?.item?.name}</h1>
+            <ContentSection
+                title='Encounters'
+            >
+                <DataGrid<EncounterRow>
+                    fetchHook={fetchEncounters}
+                    rows={fetchEncounters.data?.list}
+                    asTable
+                    withFilterText
+                    className='BasicTable HoverHighlight'
+                    renderHeader={() => [
+                        'Started',
+                        'Initiated by',
+                        'Status',
+                        'Summary',
+                        'Notes',
+                    ]}
+                    renderRow={row => dataGridRenderDataRow(
+                        [
+                            toFullDateTime(row.data.started_at),
+                            row.data.initiated_by_advocate
+                                ? 'Me'
+                                : 'Client',
+                            encounterStatusTitles[row.data.status!],
+                            row.data.summary,
+                            row.data.notes_count,
+                        ],
+                        undefined,
+                        () => {
+                            if (selectedEncounter === row.data)
+                                setSelectedEncounter(undefined)
+                            else
+                                setSelectedEncounter(row.data);
+                        },
+                        row.data === selectedEncounter
+                    )}
+                />
+            </ContentSection>
 
-            <h2>Encounters</h2>
-
-            <DataGrid<EncounterRow>
-                fetchHook={fetchEncounters}
-                rows={fetchEncounters.data?.list}
-                asTable
-                withFilterText
-                className='BasicTable HoverHighlight'
-                renderHeader={() => [
-                    'Started',
-                    'Initiated by',
-                    'Status',
-                    'Summary',
-                    'Notes',
-                ]}
-                renderRow={row => dataGridRenderDataRow([
-                    toFullDateTime(row.data.started_at),
-                    row.data.initiated_by_advocate
-                        ? 'Me'
-                        : 'Client',
-                    encounterStatusTitles[row.data.status!],
-                    row.data.summary,
-                    row.data.notes_count,
-                ], router, pageRoutes.clientView(row.data.id!))}
-            />
-
-            <h2>Notes</h2>
-
-            <DataGrid<EncounterNoteRow>
-                fetchHook={fetchNotes}
-                rows={fetchNotes.data?.list}
-                //asTable
-                withFilterText
-                className='BasicTable HoverHighlight'
-                renderRow={row => (<>
-                    {row.pageRowIndex > 0 && <hr />}
-                    <div key={row.fullRowIndex} className='EncounterNote'>
-                        <div className='Encounter'>
-                            <label>Encounter: </label>
-                            {toFullDateTime(row.data.encounter_started_at)}
-                            {' | '}
-                            with {row.data.encounter_client_name}
-                            {' | '}
-                            {row.data.encounter_initiated_by_advocate ? 'by Me' : 'by Client'}
-                            {' | '}
-                            {encounterStatusTitles[row.data.encounter_status!]}
-                            {' | '}
-                            {row.data.encounter_summary}
-                            {' '}
-                            <Button
-                                title='Edit'
-                                icon={icons.HiPencilSquare}
-                                onClick={() => editNote(row.data)}
-                            />
-                        </div>
-                        <div className='NoteSummary'>
-                            <label>Note: </label>
-                            {toFullDateTime(row.data.submitted_at)}
-                            {' | '}
-                            {encounterNoteTypeTitles[row.data.type!]}
-                            {' | '}
-                            {row.data.submitted_by_id === currentUserId
-                                ? <span>by Me</span>
-                                : <span>by Client</span>
-                            }
-                        </div>
-                        <MarkdownViewer key={3} value={row.data.message} />
-                    </div>
-                </>)}
-            />
-
-            <Dialog
-                title='Edit encounter note'
-                show={showEditNote}
-                onHide={() => setShowEditNote(false)}
-                actionBar={<>
+            <ContentSection
+                title={selectedEncounter
+                    ? 'Notes for this encounter'
+                    : 'Notes for all encounters'
+                }
+                toolbarButtons={<>
                     <Button
-                        flavor='Solid'
-                        title='Save'
-                        icon={icons.FaSave}
+                        title='New encounter'
+                        icon={icons.FaPlus}
+                        onClick={() => newEncounter()}
                     />
-                    <Button
-                        title='Cancel'
-                        onClick={() => setShowEditNote(false)}
-                    />
+                    {selectedEncounter && (
+                        <Button
+                            title='New note'
+                            icon={icons.FaPlus}
+                            disabled={!selectedEncounter}
+                            onClick={() => newNote(selectedEncounter)}
+                        />
+                    )}
                 </>}
             >
-                {selectedNote && (<>
+                <DataGrid<EncounterNoteRow>
+                    fetchHook={fetchNotes}
+                    rows={fetchNotes.data?.list}
+                    withFilterText
+                    renderRow={row => (
+                        <NoteRow
+                            row={row}
+                            onEditClick={() => editNote(row.data)}
+                        />
+                    )}
+                />
+            </ContentSection>
 
-                    <h3>Encounter</h3>
+            <EditNote
+                show={showEditNote}
+                setShow={setShowEditNote}
+                note={selectedNote}
+            />
 
-                    <div className='WrappedControls'>
-                        <InputHarness title='Encounter started' bordered>
-                            {toFullDateTime(selectedNote.encounter_started_at)}
-                        </InputHarness>
-                        <InputHarness title='Client' bordered marginLeft>
-                            {selectedNote.encounter_client_name}
-                        </InputHarness>
-                        <InputHarness title='Initiated by' bordered marginLeft>
-                            {selectedNote.encounter_initiated_by_advocate ? 'Me' : 'Client'}
-                        </InputHarness>
-                        <InputHarness title='Status' bordered marginLeft>
-                            {encounterStatusTitles[selectedNote.encounter_status!]}
-                        </InputHarness>
-                    </div>
-
-                    <InputHarness title='Status' bordered width='100%'>
-                        {selectedNote.encounter_summary}
-                    </InputHarness>
-
-                    <hr />
-
-                    <h3>Note</h3>
-
-                    <div className='WrappedControls'>
-                        <InputHarness title='Submitted' bordered>
-                            {toFullDateTime(selectedNote.submitted_at)}
-                        </InputHarness>
-                        <InputHarness title='Type' bordered marginLeft>
-                            {encounterNoteTypeTitles[selectedNote.type!]}
-                        </InputHarness>
-                        <InputHarness title='By' bordered marginLeft>
-                            {selectedNote.submitted_by_id === currentUserId
-                                ? <span>Me</span>
-                                : <span>Client</span>
-                            }
-                        </InputHarness>
-                    </div>
-
-                    <TextBox
-                        type='Multiline'
-                        title='Message'
-                        width='40rem'
-                        forceWidth
-                        height='10rem'
-                        value={selectedNote?.message}
-                    />
-
-                </>)}
-            </Dialog>
-            
-        </main>
+        </BasicPage>            
     )
 }

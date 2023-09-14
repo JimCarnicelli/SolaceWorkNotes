@@ -1,4 +1,6 @@
 import '@/styles/globals.scss'
+import { GlobalStateContextProvider } from '@/lib/hooks/useGlobalState';
+import { Toaster } from 'react-hot-toast';
 
 type Props = {
     children: React.ReactNode,
@@ -7,7 +9,12 @@ type Props = {
 export default function RootLayout(props: Props) {
     return (
         <html lang='en'>
-            <body>{props.children}</body>
+            <body>
+                <GlobalStateContextProvider>
+                    <div className='Toaster'><Toaster /></div>
+                    {props.children}
+                </GlobalStateContextProvider>
+            </body>
         </html>
     );
 }

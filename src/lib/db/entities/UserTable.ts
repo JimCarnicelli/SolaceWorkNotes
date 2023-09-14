@@ -1,6 +1,7 @@
 import { DbTable } from '@/lib/db/dbServer';
 import { Guid } from '@/lib/db/dbShared';
 
+// This is a hack for this demo that bypasses the need for logins and such
 export const currentUserId: Guid = 'acf4adb2-1397-47a7-92ae-8336b22556e6';
 
 /** One database table definition */

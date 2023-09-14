@@ -21,6 +21,7 @@ export type EncounterNoteRow = {
     encounter_id?: Guid,
     type?: EncounterNoteType,
     message?: string,
+    personal?: boolean,
     submitted_by_id?: Guid,
     submitted_at?: Date,
     read_at?: Date,

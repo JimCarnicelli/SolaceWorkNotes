@@ -30,6 +30,7 @@ export type EncounterRow = {
     deleted?: boolean,
 
     // Derived columns
+    client_name?: string,
     notes_count?: number,
 }
 

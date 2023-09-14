@@ -141,6 +141,7 @@ export default function DataGrid<T>(props: Props<T>) {
                     ? <span style={{ fontStyle: 'italic' }}>no rows</span>
                     : (<>
                         <SelectBox
+                            tooltip='Page size'
                             options={pageOptions}
                             marginLeft
                             value={take}
@@ -148,6 +149,7 @@ export default function DataGrid<T>(props: Props<T>) {
                         />
                         <Button
                             icon={icons.FaChevronLeft}
+                            tooltip='Previous page'
                             disabled={skip <= 0}
                             onClick={props.seoPreviousLink ?? (() => fetchPage(Math.max(skip - take, 0), take))}
                             onLinkClick={props.seoPreviousLink
@@ -160,6 +162,7 @@ export default function DataGrid<T>(props: Props<T>) {
                         />
                         <Button
                             icon={icons.FaChevronRight}
+                            tooltip='Next page'
                             disabled={skip + take >= totalRows}
                             linkTarget='_self'
                             onClick={props.seoNextLink ?? (() => fetchPage(skip + take, take))}
@@ -366,7 +369,7 @@ export function dataGridRenderDataRow(cells: ReactNode[], router?: AppRouterInst
                 // <a href...> overrides row clickery
                 if (elementIsIn(ev.target as HTMLElement, 'A', 'TD')) return;
                 if (elementIsIn(ev.target as HTMLElement, 'BUTTON', 'TD')) return;
-                if (router && onClick)
+                if (onClick)
                     handleButtonOnClick(ev, router, onClick);
             }}
         >

@@ -1,12 +1,14 @@
 import './InputHarness.scss';
 import { ReactNode } from 'react';
-import { FieldState } from '@/lib/utilities/useForm';
+import { FieldState } from '@/lib/hooks/useForm';
 import { icons } from '@/lib/components/graphics/Icon';
 import { cn } from '@/lib/utilities/stringHelpers';
+import { TooltipMessage, useTooltip } from '@/lib/hooks/useTooltip';
 
 export type InputHarnessProps<T> = {
     field?: FieldState<T>,
     title?: ReactNode,
+    tooltip?: TooltipMessage,
     prefix?: ReactNode,
     suffix?: ReactNode,
     beforeInput?: ReactNode,
@@ -15,6 +17,8 @@ export type InputHarnessProps<T> = {
     width?: string | number,
     forceWidth?: boolean,
     bordered?: boolean,
+    padded?: boolean,
+    simTextBox?: boolean,
     marginLeft?: boolean,
     marginRight?: boolean,
     marginBottom?: boolean,
@@ -30,6 +34,8 @@ export function InputHarness<T>(props: InputHarnessProps<T>) {
     const title = props.title ?? field?.title;
     const required = props.required ?? field?.required ?? false;
     const errorMessage = props.errorMessage ?? ((field?.touched || field?.submitted) && field?.errorMessage);
+
+    const tooltip = useTooltip();
 
     return (
         <table
@@ -47,6 +53,7 @@ export function InputHarness<T>(props: InputHarnessProps<T>) {
                     ? (props.forceWidth ? props.width : '100%')
                     : undefined,
             }}
+            {...tooltip(props.tooltip)}
         ><tbody>
             {title && (
                 <tr>
@@ -68,7 +75,9 @@ export function InputHarness<T>(props: InputHarnessProps<T>) {
                 </td>
                 <td className={
                     'Input' +
-                    cn('Bordered', props.bordered) +
+                    cn('Bordered', props.bordered || props.simTextBox) +
+                    cn('Padded', props.padded) +
+                    cn('SimTextBox', props.simTextBox) +
                     cn('WithBefore', props.bordered && props.beforeInput) +
                     cn('WithAfter', props.bordered && props.afterInput)
                 }>
@@ -83,6 +92,7 @@ export function InputHarness<T>(props: InputHarnessProps<T>) {
                             {props.onClear && (
                                 <div
                                     className='ClearButton'
+                                    {...tooltip('Clear')}
                                     onClick={props.onClear}
                                 >
                                     <icons.FaTimes />

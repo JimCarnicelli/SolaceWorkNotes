@@ -10,6 +10,7 @@ type FieldFormatter<T> = (value: string | undefined) => string | undefined;
 export type FieldDef<T> = {
     title?: string,
     required?: boolean,
+    minLength?: number,
     maxLength?: number,
     validator?: FieldValidator<T>,
     formatter?: FieldFormatter<T>,
@@ -112,6 +113,9 @@ export function useForm<T>(fieldDefs: FieldDefs, options?: Options) {
                 } else if (fieldDef.maxLength && value && value.toString().length > fieldDef.maxLength) {
                     const over = value.toString().length - fieldDef.maxLength;
                     msg = 'Too long by ' + formatDecimal(over) + (over === 1 ? ' character' : ' characters');
+                } else if (fieldDef.minLength && value && value.toString().length > fieldDef.minLength) {
+                    const under = fieldDef.minLength - value.toString().length;
+                    msg = 'Too short by ' + formatDecimal(under) + (under === 1 ? ' character' : ' characters');
                 } else if (value) {
                     msg = fieldDef.validator?.(value!);
                 }

@@ -1,12 +1,14 @@
 import './CheckBox.scss';
 import { ChangeEvent, MutableRefObject, ReactNode, useMemo } from 'react';
 import { InputKeyEvent } from '@/lib/components/scalar/TextBox';
-import { FieldState } from '@/lib/utilities/useForm';
+import { FieldState } from '@/lib/hooks/useForm';
 import { cn } from '@/lib/utilities/stringHelpers';
+import { TooltipMessage, useTooltip } from '@/lib/hooks/useTooltip';
 
 type Props = {
     field?: FieldState<boolean>,
     title?: ReactNode,
+    tooltip?: TooltipMessage,
     marginLeft?: boolean,
     marginRight?: boolean,
     className?: string,
@@ -27,6 +29,8 @@ export function CheckBox(props: Props) {
 
     const field = props.field;
     let value = props.value ?? field?.value;
+
+    const tooltip = useTooltip();
 
     function setValue(v: boolean | undefined) {
         props.setValue?.(v);
@@ -76,6 +80,7 @@ export function CheckBox(props: Props) {
                 cn('MarginLeft', props.marginLeft) +
                 cn('MarginRight', props.marginRight)
             }
+            {...tooltip(props.tooltip)}
         >
             <input
                 type='checkbox'

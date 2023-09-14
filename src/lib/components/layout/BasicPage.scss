@@ -1,0 +1,161 @@
+@import '@/styles/variables.scss';
+
+.BasicPage {
+    margin-left: auto;
+    margin-right: auto;
+    width: 100%;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+
+    h1 {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-top: 0.5rem;
+        font-family: Montserrat;
+        text-align: center;
+
+        &.Invisible {
+            display: none;
+        }
+
+        &>.Button {
+            border: 0;
+        }
+    }
+
+    &>.NavBlock {
+        width: 0;
+        min-width: 0;
+        transition: var(--transition-basic);
+    }
+
+    &>.MainLessNav {
+        flex-grow: 1;
+        display: flex;
+        flex-direction: column;
+        transition: var(--transition-basic);
+
+        &>.MainBlock {
+            flex-grow: 1;
+            display: flex;
+            width: 100%;
+            flex-grow: 1;
+            max-width: var(--page-width);
+            margin-left: auto;
+            margin-right: auto;
+            padding-left: 1rem;
+            padding-right: 1rem;
+            overflow: auto;
+
+            @media (max-width: $mobile-breakpoint) {
+                padding-left: 0.5rem;
+                padding-right: 0.5rem;
+            }
+
+            &>.MainAndFooter {
+                flex-grow: 1;
+                display: flex;
+                flex-direction: column;
+                padding-top: 1rem;
+
+                &>.Toolbar {
+                    padding-left: 1rem;
+                    padding-right: 1rem;
+                }
+
+                &>main.BasicPageContents {
+                    flex-grow: 1;
+                    padding-top: 1rem;
+                    padding-bottom: 1rem;
+
+                    &.NotFound {
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                    }
+
+                    &.Loading {
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        font-size: 3rem;
+                        color: lightblue;
+                    }
+
+                }
+
+                &>footer {
+                    padding-top: 1rem;
+
+                    .FooterLinks {
+                        border-top: 1px solid rgb(240, 240, 240);
+                    }
+
+                    a {
+                        color: gray;
+                    }
+
+                    @media (max-width: $mobile-breakpoint) {
+                        display: none;
+                    }
+                }
+
+            }
+
+        }
+    }
+
+    &.PinnedNav {
+        &>.NavBlock {
+            @media (min-width: $mobile-breakpoint) {
+                width: var(--nav-bar-width);
+                min-width: var(--nav-bar-width);
+            }
+        }
+
+        &>.MainLessNav {
+            padding-left: var(--nav-bar-width);
+        }
+    }
+
+    &.FullWidth {
+        .MainLessNav>.MainBlock {
+            max-width: 100%;
+        }
+    }
+
+    &.Bleed {
+        .MainLessNav>.MainBlock {
+            max-width: 100%;
+            padding: 0;
+
+            .MainAndFooter {
+                padding: 0;
+
+                .BasicPageContents {
+                    padding: 0;
+                }
+            }
+        }
+    }
+
+    &.Contained {
+        //height: 100vh;
+        //overflow: auto;
+
+        &>.MainBlock {
+            &>.MainAndFooter {
+                &>main.BasicPageContents {
+                    flex-grow: 1;
+                    display: flex;
+                    flex-direction: column;
+                    overflow: auto;
+                    padding: 0;
+                }
+            }
+        }
+    }
+
+}

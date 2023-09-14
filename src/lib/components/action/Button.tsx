@@ -8,6 +8,7 @@ import Link from 'next/link';
 import { SyntheticEvent } from 'react';
 import { Spinner } from '@/lib/components/action/Spinner';
 import { AppRouterInstance } from 'next/dist/shared/lib/app-router-context';
+import { TooltipMessage, useTooltip } from '@/lib/hooks/useTooltip';
 
 export type ButtonOnClick =
     string |
@@ -20,6 +21,7 @@ type Props = {
     dataName?: string,
     icon?: IconType,
     iconPosition?: 'Left' | 'Right',  // Default to left
+    tooltip?: TooltipMessage,
     disabled?: boolean,
     busy?: boolean,
     allowClickOnBusy?: boolean,
@@ -37,21 +39,26 @@ type Props = {
 /** Encapsulates the nuances of handling users clicking a buton */
 export function handleButtonOnClick(
     ev: SyntheticEvent,
-    router: AppRouterInstance,
+    router: AppRouterInstance | undefined,
     onClick: ButtonOnClick | undefined
 ) {
     if (!onClick) return;
     if ((onClick as string).charAt) {
+        if (!router) throw new Error('Missing router');
         router.push(onClick as string);
     } else {
         const url = (onClick as Function)(ev);
-        if (url && typeof url === 'string') router.push(url);
+        if (url && typeof url === 'string') {
+            if (!router) throw new Error('Missing router');
+            router.push(url);
+        }
     }
 }
 
 export const Button = forwardRef<HTMLElement, Props>((props, ref) => {
 
     const router = useRouter();
+    const tooltip = useTooltip();
 
     function onClick(ev: SyntheticEvent) {
         if (props.busy && !props.allowClickOnBusy) return;
@@ -106,6 +113,7 @@ export const Button = forwardRef<HTMLElement, Props>((props, ref) => {
                     )
                 }
                 onClick={ev => props.onLinkClick?.(ev)}
+                {...tooltip(props.tooltip)}
             >
                 {guts}
             </Link>
@@ -120,6 +128,7 @@ export const Button = forwardRef<HTMLElement, Props>((props, ref) => {
                 className={className + cn('Busy', props.busy)}
                 disabled={props.disabled}
                 onClick={ev => onClick(ev)}
+                {...tooltip(props.tooltip)}
             >
                 {guts}
             </button>
