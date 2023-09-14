@@ -134,7 +134,7 @@ export default function Page(props: Props) {
                         [
                             row.data.id === selectedEncounterId
                                 ? <icons.TiArrowRightThick/>
-                                : '',
+                                : <>&nbsp;&nbsp;&nbsp;&nbsp;</>,
                             toFullDateTime(row.data.started_at),
                             row.data.initiated_by_advocate
                                 ? 'Me'

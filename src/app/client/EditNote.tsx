@@ -66,7 +66,6 @@ export function EditNote(props: Props) {
                 () => form.f.personal.setValue(false),
                 () => form.f.personal.setValue(true)
             );
-            console.log('Whoop')
         } else {
             form.f.personal.setValue(value);
         }
