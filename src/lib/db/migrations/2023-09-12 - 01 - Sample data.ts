@@ -104,7 +104,7 @@ INSERT INTO encounter_note (
     'd97b629d-55e8-4534-bfd6-7ae71dec5877',
     'acf4adb2-1397-47a7-92ae-8336b22556e6',
     2,  -- Case note
-    'I dont\'\' know what. But something happened.',
+    'I don\'\'t know what. But something happened.',
     TRUE,
     '2023-09-13 10:15:38-04',
     '2023-09-13 10:15:38-04',

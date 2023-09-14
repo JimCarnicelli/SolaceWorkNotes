@@ -1,6 +1,6 @@
 'use client';
 import { currentUserId } from '@/lib/db/entities/UserTable';
-import { formatDateForInput, formatTimeForInput, toFullDateTime, toShortDateTime } from '@/lib/utilities/dateTime';
+import { toFullDateTime, toShortDateTime } from '@/lib/utilities/dateTime';
 import { Dialog } from '@/lib/components/layout/Dialog';
 import { Button } from '@/lib/components/action/Button';
 import { TextBox } from '@/lib/components/scalar/TextBox';
@@ -13,19 +13,25 @@ import { useEffect, useMemo } from 'react';
 import { ContentSection } from '@/lib/components/layout/ContentSection';
 import { MarkdownViewer } from '@/lib/components/scalar/MarkdownViewer';
 import { CheckBox } from '@/lib/components/scalar/CheckBox';
+import { useMessageBox } from '@/lib/components/action/MessageBox';
+import { apiEncounterNoteSave } from '../api/encounter/note/save/_def';
 
 type Props = {
     show: boolean,
     setShow: (value: boolean) => void,
     note: EncounterNoteRow | undefined,
+    setNote?: (note: EncounterNoteRow) => void,
 }
 
 export function EditNote(props: Props) {
 
+    const messageBox = useMessageBox();
+
+    //--------------------------------------------------------------------------------
     const form = useForm<{
         message: FieldState<string>,
-        submitted_at_date: FieldState<string>,
-        submitted_at_time: FieldState<string>,
+        submitted_at: FieldState<string>,
+        personal: FieldState<boolean>,
     }>(
         useMemo(() => ({
             message: {
@@ -34,47 +40,91 @@ export function EditNote(props: Props) {
                 minLength: 20,
                 maxLength: 300,
             },
-            submitted_at_date: {
+            submitted_at: {
                 title: 'Submitted',
                 required: true,
             },
-            submitted_at_time: {
-                title: 'At',
-                required: true,
+            personal: {
+                title: 'Personal'
             },
         }), [])
     );
 
+    //--------------------------------------------------------------------------------
     useEffect(() => {
         if (!props.show) return;
         form.unpackItem(props.note);
     }, [props.show]);  // eslint-disable-line react-hooks/exhaustive-deps
 
-    const readOnly = props.note?.submitted_by_id === currentUserId;
+    const readOnly = props.note?.submitted_by_id !== currentUserId;
 
+    //--------------------------------------------------------------------------------
+    function onChangePersonal(value: boolean) {
+        if (!value) {
+            messageBox.showOkay(
+                'Okay to share this with the client?',
+                () => form.f.personal.setValue(false),
+                () => form.f.personal.setValue(true)
+            );
+            console.log('Whoop')
+        } else {
+            form.f.personal.setValue(value);
+        }
+    }
+
+    //--------------------------------------------------------------------------------
+    async function onSave() {
+        let item = form.packItem(props.note?.id);
+        const newItem = await apiEncounterNoteSave.call({ item });
+        form.setDirty(false);
+        props.setNote?.(newItem.item);
+        props.setShow(false);
+    }
+
+    //--------------------------------------------------------------------------------
+    function onCancel() {
+        if (form.dirty) {
+            messageBox.show({
+                message: `You have unsaved changes. Sure you want to leave?`,
+                onOkay: () => {
+                    form.setDirty(false);
+                    props.setShow(false)
+                },
+                okayTitle: 'Leave',
+                cancelTitle: 'Stay',
+            });
+        } else {
+            form.setDirty(false);
+            props.setShow(false);
+        }
+    }
+
+    //--------------------------------------------------------------------------------
     return (
         <Dialog
             title='Encounter note'
             show={props.show}
             hideOnMaskClick
+            hideOnEscape={readOnly}
             onHide={() => props.setShow(false)}
             actionBar={readOnly
                 ? (<>
                     <Button
                         flavor='Solid'
-                        title='Save'
-                        icon={icons.FaSave}
-                    />
-                    <Button
-                        title='Cancel'
+                        title='Close'
                         onClick={() => props.setShow(false)}
                     />
                 </>)
                 : (<>
                     <Button
                         flavor='Solid'
-                        title='Close'
-                        onClick={() => props.setShow(false)}
+                        title='Save'
+                        icon={icons.FaSave}
+                        onClick={onSave}
+                    />
+                    <Button
+                        title='Cancel'
+                        onClick={onCancel}
                     />
                 </>)
             }
@@ -106,25 +156,39 @@ export function EditNote(props: Props) {
                 <ContentSection title='Note'>
                     <div className='WrappedControls'>
                         <InputHarness title='Submitted' simTextBox>
-                            {toShortDateTime(props.note.submitted_at)}
+                            {toShortDateTime(form.f.submitted_at.value)}
                         </InputHarness>
+                        {!readOnly && (
+                            <Button
+                                flavor='Solid'
+                                title='Now'
+                                onClick={() => {
+                                    form.f.submitted_at.setValue(new Date());
+                                }}
+                            />
+                        )}
                         <InputHarness title='Type' simTextBox marginLeft>
                             {encounterNoteTypeTitles[props.note.type!]}
                         </InputHarness>
                         <InputHarness title='By' simTextBox marginLeft>
                             {readOnly
-                                ? <span>Me</span>
-                                : <span>Client</span>
+                                ? <span>Client</span>
+                                : <span>Me</span>
                             }
                         </InputHarness>
                         <CheckBox
-                            title='Private'
-                            value={props.note.personal}
+                            field={form.f.personal}
+                            setValue={value => onChangePersonal(!!value)}
                         />
                     </div>
 
                     {readOnly
                         ? (<>
+                            <InputHarness title='Message' bordered padded width='100%'>
+                                <MarkdownViewer value={props.note.message} />
+                            </InputHarness>
+                        </>)
+                        : (<>
                             <TextBox
                                 field={form.f.message}
                                 type='Multiline'
@@ -133,11 +197,6 @@ export function EditNote(props: Props) {
                                 height='10rem'
                                 autoFocus
                             />
-                        </>)
-                        : (<>
-                            <InputHarness title='Message' bordered padded width='100%'>
-                                <MarkdownViewer value={props.note.message} />
-                            </InputHarness>
                         </>)
                     }
                 </ContentSection>

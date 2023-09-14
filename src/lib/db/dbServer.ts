@@ -372,7 +372,7 @@ ${limitClause} ${offsetClause}
         values: T,
         includeDeleted?: boolean
     ): Promise<T> {
-        const count = await this.updateRows(table, where, alsoWhere, values, includeDeleted);
+        const count = +(await this.updateRows(table, where, alsoWhere, values, includeDeleted));
         if (count > 1) throw new Error(`db.saveRow() updated ${count} rows instead of just 1`);
         let row: T;
         if (count) {

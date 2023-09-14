@@ -41,9 +41,12 @@ export function NoteRow(props: Props) {
                     ? <span>by Me</span>
                     : <span>by Client</span>
                 }
+                {' | '}
+                {row.data.personal ? 'Personal' : 'Shared'}
             </div>
             <MarkdownViewer key={3} value={row.data.message} />
             <Button
+                flavor='Solid'
                 title={row.data.submitted_by_id === currentUserId ? 'Edit' : 'View'}
                 icon={row.data.submitted_by_id === currentUserId ? icons.HiPencilSquare : icons.FaEye}
                 onClick={() => props.onEditClick?.()}

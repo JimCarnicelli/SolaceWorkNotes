@@ -48,6 +48,11 @@ export default function Page() {
     }
 
     //--------------------------------------------------------------------------------
+    function onNoteUpdated(note: EncounterNoteRow) {
+        fetchNotes.quietRefresh();
+    }
+
+    //--------------------------------------------------------------------------------
     return (
         <BasicPage
             title='My clients'
@@ -89,6 +94,7 @@ export default function Page() {
                 show={showEditNote}
                 setShow={setShowEditNote}
                 note={selectedNote}
+                setNote={note => onNoteUpdated(note)}
             />
 
         </BasicPage>

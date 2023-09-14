@@ -20,6 +20,7 @@ type Props = {
     onShow?: () => void,
     onHide?: () => void,
     onOkay?: () => void,
+    hideOnEscape?: boolean,
 }
 
 export function Dialog(props: Props) {
@@ -32,7 +33,7 @@ export function Dialog(props: Props) {
         <Modal
             show={props.show}
             enableKeyboard={props.enableKeyboard}
-            onEscapePress={props.onHide}
+            onEscapePress={() => (props.hideOnEscape !== false) && props.onHide?.()}
             onEnterPress={props.onOkay}
             onMaskClick={() => props.hideOnMaskClick && props.onHide?.()}
         >

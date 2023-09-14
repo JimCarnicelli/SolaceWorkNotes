@@ -28,7 +28,7 @@ export async function encounterNoteList(props: apiEncounterNoteList.Params) {
         `,
         order: ['submitted_at!'],
         columns: [
-            dbCore.allColumns(),
+            dbCore.allColumns('t'),
             dbCore.colExpr('encounter_client_id', 'e.client_id'),
             dbCore.colExpr('encounter_client_name', 'ec.name'),
             dbCore.lookupCol(UserTable, 'submitted_by_id', 'submitted_by_name'),

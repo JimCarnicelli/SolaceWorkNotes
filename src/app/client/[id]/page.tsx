@@ -3,7 +3,6 @@ import { useState } from 'react';
 import { Guid } from '@/lib/db/dbShared';
 import { useFetch } from '@/lib/hooks/useFetch';
 import { apiUserGet } from '@/app/api/user/get/_def';
-import { useRouter } from 'next/navigation';
 import { apiEncounterList } from '@/app/api/encounter/list/_def';
 import { currentUserId } from '@/lib/db/entities/UserTable';
 import DataGrid, { dataGridRenderDataRow } from '@/lib/components/DataGrid';
@@ -18,6 +17,7 @@ import { ContentSection } from '@/lib/components/layout/ContentSection';
 import { NoteRow } from '../NoteRow';
 import { Button } from '@/lib/components/action/Button';
 import { icons } from '@/lib/components/graphics/Icon';
+import { useMessageBox } from '@/lib/components/action/MessageBox';
 
 const encountersDefaultPageSize = 5;
 const notesDefaultPageSize = 10;
@@ -31,10 +31,10 @@ type Props = {
 export default function Page(props: Props) {
     const itemId = props.params.id;
 
-    const router = useRouter();
+    const messageBox = useMessageBox();
 
     const [showEditNote, setShowEditNote] = useState(false);
-    const [selectedEncounter, setSelectedEncounter] = useState<EncounterRow>();
+    const [selectedEncounterId, setSelectedEncounterId] = useState<Guid>();
     const [selectedNote, setSelectedNote] = useState<EncounterNoteRow>();
 
     //--------------------------------------------------------------------------------
@@ -58,20 +58,19 @@ export default function Page(props: Props) {
             ...p,
             advocateId: currentUserId,
             clientId: itemId,
-            encounterId: selectedEncounter?.id,
+            encounterId: selectedEncounterId,
         }),
         pageSize: notesDefaultPageSize,
-    }, [itemId, selectedEncounter?.id]);
+    }, [itemId, selectedEncounterId]);
+
+    //--------------------------------------------------------------------------------
+    function newEncounter() {
+        messageBox.show({ message: 'Not yet implemented' });
+    }
 
     //--------------------------------------------------------------------------------
     function editNote(row: EncounterNoteRow) {
         setSelectedNote(row);
-        setShowEditNote(true);
-    }
-
-    //--------------------------------------------------------------------------------
-    function newEncounter() {
-
         setShowEditNote(true);
     }
 
@@ -90,6 +89,12 @@ export default function Page(props: Props) {
             encounter_started_at: encounter.started_at,
         });
         setShowEditNote(true);
+    }
+
+    //--------------------------------------------------------------------------------
+    function onNoteUpdated(note: EncounterNoteRow) {
+        fetchEncounters.quietRefresh();
+        fetchNotes.quietRefresh();
     }
 
     //--------------------------------------------------------------------------------
@@ -118,6 +123,7 @@ export default function Page(props: Props) {
                     withFilterText
                     className='BasicTable HoverHighlight'
                     renderHeader={() => [
+                        '',
                         'Started',
                         'Initiated by',
                         'Status',
@@ -126,6 +132,9 @@ export default function Page(props: Props) {
                     ]}
                     renderRow={row => dataGridRenderDataRow(
                         [
+                            row.data.id === selectedEncounterId
+                                ? <icons.TiArrowRightThick/>
+                                : '',
                             toFullDateTime(row.data.started_at),
                             row.data.initiated_by_advocate
                                 ? 'Me'
@@ -136,18 +145,18 @@ export default function Page(props: Props) {
                         ],
                         undefined,
                         () => {
-                            if (selectedEncounter === row.data)
-                                setSelectedEncounter(undefined)
+                            if (selectedEncounterId === row.data.id)
+                                setSelectedEncounterId(undefined)
                             else
-                                setSelectedEncounter(row.data);
+                                setSelectedEncounterId(row.data.id);
                         },
-                        row.data === selectedEncounter
+                        row.data.id === selectedEncounterId
                     )}
                 />
             </ContentSection>
 
             <ContentSection
-                title={selectedEncounter
+                title={selectedEncounterId
                     ? 'Notes for this encounter'
                     : 'Notes for all encounters'
                 }
@@ -157,14 +166,15 @@ export default function Page(props: Props) {
                         icon={icons.FaPlus}
                         onClick={() => newEncounter()}
                     />
-                    {selectedEncounter && (
-                        <Button
-                            title='New note'
-                            icon={icons.FaPlus}
-                            disabled={!selectedEncounter}
-                            onClick={() => newNote(selectedEncounter)}
-                        />
-                    )}
+                    <Button
+                        title='New note'
+                        icon={icons.FaPlus}
+                        disabled={!selectedEncounterId}
+                        onClick={() => {
+                            const row = fetchEncounters.data?.list?.rows.find(row => row.id === selectedEncounterId);
+                            if (row) newNote(row);
+                        }}
+                    />
                 </>}
             >
                 <DataGrid<EncounterNoteRow>
@@ -184,6 +194,7 @@ export default function Page(props: Props) {
                 show={showEditNote}
                 setShow={setShowEditNote}
                 note={selectedNote}
+                setNote={note => onNoteUpdated(note)}
             />
 
         </BasicPage>            

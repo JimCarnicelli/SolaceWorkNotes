@@ -53,8 +53,6 @@ export type FormHook<T> = {
     packItem: (id?: Guid) => { [key: string]: any },
     /** Populate my form fields with values taken from the given object, typically loaded from a database */
     unpackItem: (item?: { [key: string]: any }) => void,
-    /** Wraps up some common UI niceties of saving this form's contents to a database */
-    commonSave: (apiCall: () => Promise<string | undefined>) => Promise<boolean>,
 };
 
 export function useForm<T>(fieldDefs: FieldDefs, options?: Options) {
@@ -181,40 +179,6 @@ export function useForm<T>(fieldDefs: FieldDefs, options?: Options) {
         setDirty(false);  // This mechanism is meant for starting fresh with loaded data
     }
 
-    async function commonSave(apiCall: () => Promise<string | undefined>): Promise<boolean> {
-        setSubmitted(true);
-        setCustomErrorMessage(undefined);
-        if (!valid) {
-            toast('Error', 'Error saving');
-            return false;
-        }
-
-        setBusy(true);
-        try {
-
-            const failure = await apiCall();
-            setBusy(false);
-
-            setErrorMessage(failure);
-            if (failure) {
-                toast('Error', 'Error saving');
-                return false;
-            }
-
-            toast('Success', 'Saved');
-            setDirty(false);
-
-            return true;
-
-        } catch (err: any) {
-            toast('Error', 'Error saving');
-            setBusy(false);
-            setErrorMessage(err.message ?? err.toString());
-            return false;
-        }
-
-    }
-
     let f: {[name: string]: FieldState<any>} = {};
     fieldNames.forEach(name => {
         const fieldDef = fieldDefs[name];
@@ -269,7 +233,6 @@ export function useForm<T>(fieldDefs: FieldDefs, options?: Options) {
         fieldDefs,
         fieldNames,
         packItem, unpackItem,
-        commonSave,
         dirty, setDirty,
     } as FormHook<T>;
 }
