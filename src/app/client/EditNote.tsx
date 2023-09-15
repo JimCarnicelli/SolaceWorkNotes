@@ -15,6 +15,7 @@ import { MarkdownViewer } from '@/lib/components/scalar/MarkdownViewer';
 import { CheckBox } from '@/lib/components/scalar/CheckBox';
 import { useMessageBox } from '@/lib/components/action/MessageBox';
 import { apiEncounterNoteSave } from '../api/encounter/note/save/_def';
+import { toast } from '@/lib/utilities/toastNotifications';
 
 type Props = {
     show: boolean,
@@ -73,11 +74,16 @@ export function EditNote(props: Props) {
 
     //--------------------------------------------------------------------------------
     async function onSave() {
-        let item = form.packItem(props.note?.id);
+        let item = form.packItem(props.note?.id) as EncounterNoteRow;
+        item.encounter_id = props.note?.encounter_id;
+        item.type = props.note?.type;
+        item.submitted_by_id = currentUserId;
+
         const newItem = await apiEncounterNoteSave.call({ item });
         form.setDirty(false);
         props.setNote?.(newItem.item);
         props.setShow(false);
+        toast('Success', 'Note saved');
     }
 
     //--------------------------------------------------------------------------------
@@ -103,7 +109,7 @@ export function EditNote(props: Props) {
         <Dialog
             title='Encounter note'
             show={props.show}
-            hideOnMaskClick
+            hideOnMaskClick={!form.dirty}
             hideOnEscape={readOnly}
             onHide={() => props.setShow(false)}
             actionBar={readOnly

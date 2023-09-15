@@ -1,0 +1,32 @@
+.NoteRow {
+    padding-bottom: 1rem;
+    border-top: 1px solid var(--color-page-text-soft);
+
+    .DividedText {
+        display: flex;
+        flex-wrap: wrap;
+        padding-top: 0.5rem;
+        padding-bottom: 0.5rem;
+        border-bottom: 1px solid var(--color-page-hairline);
+
+        &>label {
+            margin-right: 0.5rem;
+            font-size: 0.9rem;
+            color: var(--color-page-text-soft);
+        }
+
+        &>span {
+            display: flex;
+            align-items: center;
+            border-left: 1px solid var(--color-page-hairline);
+            padding-left: 0.5rem;
+            padding-right: 0.5rem;
+
+            svg {
+                color: var(--color-page-text-soft);
+                margin-right: 0.3rem;
+            }
+        }
+    }
+
+}

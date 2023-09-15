@@ -3,6 +3,7 @@ import { Guid } from "./db/dbShared";
 export namespace pageRoutes {
 
     export const home = () => '/';
+    export const migrations = () => '/migrations';
 
     export const clientList = () => `/client`;
     export const clientView = (id: Guid) => `/client/${id}`;

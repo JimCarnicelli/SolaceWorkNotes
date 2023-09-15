@@ -18,6 +18,8 @@ import { NoteRow } from '../NoteRow';
 import { Button } from '@/lib/components/action/Button';
 import { icons } from '@/lib/components/graphics/Icon';
 import { useMessageBox } from '@/lib/components/action/MessageBox';
+import { apiEncounterNoteDelete } from '@/app/api/encounter/note/delete/_def';
+import { toast } from '@/lib/utilities/toastNotifications';
 
 const encountersDefaultPageSize = 5;
 const notesDefaultPageSize = 10;
@@ -69,16 +71,32 @@ export default function Page(props: Props) {
     }
 
     //--------------------------------------------------------------------------------
-    function editNote(row: EncounterNoteRow) {
+    function onEditNote(row: EncounterNoteRow) {
         setSelectedNote(row);
         setShowEditNote(true);
     }
 
     //--------------------------------------------------------------------------------
-    function newNote(encounter: EncounterRow) {
+    function onDeleteNote(row: EncounterNoteRow) {
+        messageBox.showDelete(
+            `Delete this note?`,
+            'Delete',
+            async () => {
+                await apiEncounterNoteDelete.call({ id: row.id! });
+                setSelectedNote(undefined);
+                fetchEncounters.quietRefresh();
+                fetchNotes.quietRefresh();
+                toast('Warning', 'Note deleted');
+            }
+        )
+    }
+
+    //--------------------------------------------------------------------------------
+    function onNewNote(encounter: EncounterRow) {
         setSelectedNote({
             encounter_id: encounter.id,
             type: EncounterNoteType.caseNote,
+            personal: true,
             submitted_by_id: currentUserId,
             submitted_at: new Date(),
             encounter_client_id: encounter.client_id,
@@ -87,6 +105,24 @@ export default function Page(props: Props) {
             encounter_initiated_by_advocate: encounter.initiated_by_advocate,
             encounter_summary: encounter.summary,
             encounter_started_at: encounter.started_at,
+        });
+        setShowEditNote(true);
+    }
+
+    //--------------------------------------------------------------------------------
+    function onNewNoteFromNote(note: EncounterNoteRow) {
+        setSelectedNote({
+            encounter_id: note.encounter_id,
+            type: EncounterNoteType.caseNote,
+            personal: true,
+            submitted_by_id: currentUserId,
+            submitted_at: new Date(),
+            encounter_client_id: note.encounter_client_id,
+            encounter_client_name: note.encounter_client_name,
+            encounter_status: note.encounter_status,
+            encounter_initiated_by_advocate: note.encounter_initiated_by_advocate,
+            encounter_summary: note.encounter_summary,
+            encounter_started_at: note.encounter_started_at,
         });
         setShowEditNote(true);
     }
@@ -115,6 +151,7 @@ export default function Page(props: Props) {
 
             <ContentSection
                 title='Encounters'
+                collapsable
             >
                 <DataGrid<EncounterRow>
                     fetchHook={fetchEncounters}
@@ -160,6 +197,7 @@ export default function Page(props: Props) {
                     ? 'Notes for this encounter'
                     : 'Notes for all encounters'
                 }
+                collapsable
                 toolbarButtons={<>
                     <Button
                         title='New encounter'
@@ -172,7 +210,7 @@ export default function Page(props: Props) {
                         disabled={!selectedEncounterId}
                         onClick={() => {
                             const row = fetchEncounters.data?.list?.rows.find(row => row.id === selectedEncounterId);
-                            if (row) newNote(row);
+                            if (row) onNewNote(row);
                         }}
                     />
                 </>}
@@ -184,7 +222,9 @@ export default function Page(props: Props) {
                     renderRow={row => (
                         <NoteRow
                             row={row}
-                            onEditClick={() => editNote(row.data)}
+                            onEditNote={() => onEditNote(row.data)}
+                            onNewNote={() => onNewNoteFromNote(row.data)}
+                            onDeleteNote={() => onDeleteNote(row.data)}
                         />
                     )}
                 />

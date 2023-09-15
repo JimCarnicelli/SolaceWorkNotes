@@ -53,6 +53,7 @@ export function BasicPage(props: Props) {
     }, [props.asManagement]);
 
     return (<>
+
         <div className={
             'BasicPage' +
             cn('DevMode', process.env.NEXT_PUBLIC_ENV !== 'production') +
