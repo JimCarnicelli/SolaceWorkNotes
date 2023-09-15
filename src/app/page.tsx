@@ -42,9 +42,9 @@ export default function Page(props: Props) {
 
             <p>
                 If you just installed this project and are still setting it up, you&apos;ll need
-                to <a href={pageRoutes.migrations()}>Run the database migration scripts</a> to 
+                to <a href={pageRoutes.migrations()}>run the database migration scripts</a> to 
                 construct the new schema and add some sample data to the blank database you 
-                configured. Copy the .env file to .env.local an customize it to your dev environment.
+                configured. Copy the .env file to .env.local and customize it to your dev environment.
             </p>
 
             <p>
