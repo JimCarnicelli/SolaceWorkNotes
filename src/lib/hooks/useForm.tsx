@@ -74,6 +74,7 @@ export function useForm<T>(fieldDefs: FieldDefs, options?: Options) {
 
     useEffect(() => {
         setDirty(false);
+        setInitialied(true);
     }, []);
 
     // Linearize the field definition object's features
@@ -111,7 +112,7 @@ export function useForm<T>(fieldDefs: FieldDefs, options?: Options) {
                 } else if (fieldDef.maxLength && value && value.toString().length > fieldDef.maxLength) {
                     const over = value.toString().length - fieldDef.maxLength;
                     msg = 'Too long by ' + formatDecimal(over) + (over === 1 ? ' character' : ' characters');
-                } else if (fieldDef.minLength && value && value.toString().length > fieldDef.minLength) {
+                } else if (fieldDef.minLength && value && value.toString().length < fieldDef.minLength) {
                     const under = fieldDef.minLength - value.toString().length;
                     msg = 'Too short by ' + formatDecimal(under) + (under === 1 ? ' character' : ' characters');
                 } else if (value) {

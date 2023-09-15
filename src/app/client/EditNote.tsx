@@ -110,7 +110,7 @@ export function EditNote(props: Props) {
             title='Encounter note'
             show={props.show}
             hideOnMaskClick={!form.dirty}
-            hideOnEscape={readOnly}
+            hideOnEscape={!form.dirty}
             onHide={() => props.setShow(false)}
             actionBar={readOnly
                 ? (<>
@@ -125,6 +125,7 @@ export function EditNote(props: Props) {
                         flavor='Solid'
                         title='Save'
                         icon={icons.FaSave}
+                        disabled={!form.valid}
                         onClick={onSave}
                     />
                     <Button
