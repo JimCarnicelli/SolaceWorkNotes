@@ -57,7 +57,7 @@ I'll assume without explicit implementation that an advocate is part of a team a
 
 Given the limited scope of this simple project I want to favor technologies I am already familiar with rather than take the time to adopt and gain proficiency with technologies used by Solace. Knowing that I can ramp up to them quickly if hired. Some seem simple enough to learn and implement though.
 
-Solace's job posting emphasizes the use of Typescript. No problem. I have not used Nest.js, a stated standard for Solace. It appears to have a similar goal but slightly different appraoch to server-oriented web apps from Next.js. I'll go wtih Next.js because of my strong experience with it. Postgres will be a fine database choice. I have not used TypeORM or SWR previously. I'll skip them in the name of development speed here. To keep development client-side development simple I'll skip using Redux.
+Solace's job posting emphasizes the use of Typescript. No problem. I have not used Nest.js, a stated standard for Solace. It appears to have a similar goal but slightly different approach to server-oriented web apps from Next.js. I'll go wtih Next.js because of my strong experience with it. Postgres will be a fine database choice. I have not used TypeORM or SWR previously. I'll skip them in the name of development speed here. To keep development client-side development simple I'll skip using Redux.
 
 For the sake of shortening the development cycle I'll bring in some existing libraries I've made for other Next.js projects. Like my database and client/server API interface.
 
