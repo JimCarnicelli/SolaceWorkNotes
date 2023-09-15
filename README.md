@@ -11,9 +11,9 @@ Started 9/11/2023 by [Jim Carnicelli](https://jimcarnicelli.com) as an assignmen
 2. Create empty Postgres database
 3. Copy .env file to .env.local and edit Postgres DB settings
 4. npm run dev
-5. Visit http://localhost.88/
-6. Click http://localhost.88/migrations to populate empty database
-7. Ready to go with http://localhost.88/client
+5. Visit http://localhost:88/
+6. Click http://localhost:88/migrations to populate empty database
+7. Ready to go with http://localhost:88/client
 
 
 # Assignment
